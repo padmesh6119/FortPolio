@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Padmesh P S — Seventeen Breach Reports</title>
+<meta name="description" content="Twenty-three vulnerabilities, found in production systems. A reader by Padmesh P S, 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0a0a0c;
+  --bg-warm:#100e0c;
+  --ink:#ece8df;
+  --ink-soft:rgba(236,232,223,0.78);
+  --ink-dim:rgba(236,232,223,0.55);
+  --ink-mute:rgba(236,232,223,0.32);
+  --line:rgba(236,232,223,0.08);
+  --line-soft:rgba(236,232,223,0.05);
+  --serif:'Instrument Serif',serif;
+  --sans:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --crit:#ff6b5b;
+  --high:#ffa257;
+  --med:#ffd575;
+  --low:#7ab8ff;
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.7;
+  min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+/* warm ambience layer */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 700px at 18% 12%,rgba(255,162,87,0.05),transparent 55%),
+    radial-gradient(700px 500px at 82% 88%,rgba(122,184,255,0.03),transparent 60%),
+    radial-gradient(500px 400px at 50% 50%,rgba(255,107,91,0.025),transparent 70%);
+}
+/* film grain */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:0.18;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.91 0 0 0 0 0.87 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* scroll progress hairline */
+.bar-top{
+  position:fixed;top:0;left:0;right:0;height:1px;z-index:90;
+  background:rgba(236,232,223,0.04);
+}
+.bar-top::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);
+  background:linear-gradient(90deg,var(--ink),rgba(236,232,223,0.4));
+  transition:width 0.12s linear;
+}
+
+/* topbar */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.4rem 2rem;
+  font-family:var(--mono);font-size:0.62rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-mute);
+}
+.topbar a,.topbar button{
+  background:none;border:none;cursor:pointer;
+  font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit;
+  text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;
+  transition:color 0.25s;
+}
+.topbar a:hover,.topbar button:hover{color:var(--ink);}
+.topbar .arrow{font-family:var(--serif);font-size:1rem;}
+
+.wrap{position:relative;z-index:2;}
+
+/* ━━━━━━━━━━ TITLE PAGE ━━━━━━━━━━ */
+.titlepage{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:7rem 3rem 3rem;
+  position:relative;
+}
+.tp-corners{
+  position:absolute;top:5.5rem;left:3rem;right:3rem;
+  display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;
+  color:var(--ink-mute);text-transform:uppercase;
+}
+.tp-middle{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;flex:1;padding:2rem 0;
+}
+.tp-eyebrow{
+  font-family:var(--mono);font-size:0.7rem;letter-spacing:0.4em;
+  color:var(--ink-mute);text-transform:uppercase;margin-bottom:2.5rem;
+  display:flex;align-items:center;gap:1.2rem;
+}
+.tp-eyebrow .line{width:60px;height:1px;background:var(--ink-mute);}
+.tp-title{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(3.5rem,13vw,12rem);
+  line-height:0.88;letter-spacing:-0.025em;
+  margin:0 0 0.4rem;
+}
+.tp-title-2{
+  font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:clamp(2.5rem,10vw,9rem);
+  line-height:0.95;color:var(--ink-dim);
+  letter-spacing:-0.02em;
+}
+.tp-flourish{
+  font-family:var(--serif);color:var(--ink-mute);
+  font-size:1.5rem;letter-spacing:0.6rem;margin:3rem 0 2.5rem;
+}
+.tp-sub{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.05rem,1.8vw,1.35rem);
+  color:var(--ink-dim);max-width:38ch;
+  line-height:1.5;
+}
+.tp-byline{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;
+  color:var(--ink-mute);text-transform:uppercase;flex-wrap:wrap;gap:1rem;
+}
+.tp-byline-block{display:flex;flex-direction:column;gap:0.3rem;}
+.tp-byline span:last-child{color:var(--ink-dim);}
+.tp-scroll{
+  text-align:center;margin-top:2rem;
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.3em;
+  color:var(--ink-mute);text-transform:uppercase;
+  animation:scrollHint 2.4s ease-in-out infinite;
+}
+@keyframes scrollHint{
+  0%,100%{opacity:0.4;transform:translateY(0);}
+  50%{opacity:0.9;transform:translateY(4px);}
+}
+
+/* ━━━━━━━━━━ PREFACE ━━━━━━━━━━ */
+.preface{
+  max-width:640px;margin:0 auto;
+  padding:9rem 2rem 7rem;
+}
+.sec-label{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.24em;
+  color:var(--ink-mute);text-transform:uppercase;
+  margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;
+}
+.sec-label .dash{flex:1;height:1px;background:var(--line);}
+.preface h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.2rem,5vw,3.4rem);
+  line-height:1.05;letter-spacing:-0.015em;margin-bottom:2.5rem;
+}
+.preface h2 em{font-style:italic;color:var(--ink-dim);}
+.preface p{
+  font-family:var(--serif);font-size:1.18rem;line-height:1.65;
+  color:var(--ink-soft);margin-bottom:1.4rem;
+}
+.preface p em{color:var(--ink);font-style:italic;}
+.preface p strong{font-weight:400;color:var(--ink);}
+.preface-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.8rem;
+  margin-top:3.5rem;padding-top:2rem;border-top:1px solid var(--line);
+}
+.ps-v{font-family:var(--serif);font-size:2.4rem;line-height:1;}
+.ps-l{
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--ink-mute);margin-top:0.5rem;
+}
+
+/* ━━━━━━━━━━ READING RAIL ━━━━━━━━━━ */
+.rail{
+  position:fixed;left:2rem;top:50%;transform:translateY(-50%);
+  z-index:30;
+  display:flex;flex-direction:column;gap:0.9rem;
+  opacity:0;transition:opacity 0.6s;pointer-events:none;
+}
+.rail.on{opacity:1;}
+.rail-num{
+  font-family:var(--serif);font-size:5.2rem;line-height:0.85;
+  color:var(--ink);transition:color 0.4s;
+}
+.rail-of{
+  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;
+  color:var(--ink-mute);text-transform:uppercase;
+}
+.rail-bar{
+  width:1px;height:120px;background:rgba(236,232,223,0.08);
+  position:relative;margin:0.4rem 0;
+}
+.rail-bar::after{
+  content:'';position:absolute;left:0;top:0;width:100%;
+  height:var(--p,0%);background:var(--ink);
+  transition:height 0.4s cubic-bezier(.16,1,.3,1);
+}
+.rail-target{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;
+  color:var(--ink-dim);text-transform:uppercase;
+}
+.rail-sev{
+  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.14em;
+  padding:0.22rem 0.5rem;border:1px solid currentColor;border-radius:3px;
+  display:inline-block;width:max-content;text-transform:uppercase;
+}
+.rail-sev.crit{color:var(--crit);}
+.rail-sev.high{color:var(--high);}
+.rail-sev.med{color:var(--med);}
+.rail-sev.low{color:var(--low);}
+
+/* ━━━━━━━━━━ CHAPTERS ━━━━━━━━━━ */
+.chapters{position:relative;padding-top:2rem;}
+
+.chapter{
+  max-width:660px;margin:0 auto;
+  padding:6rem 2rem 6rem;position:relative;
+  opacity:0;transform:translateY(28px);
+  transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);
+}
+.chapter.in{opacity:1;transform:none;}
+
+.ch-divider{
+  display:flex;justify-content:center;align-items:center;
+  padding:1rem 0;color:var(--ink-mute);font-family:var(--serif);
+  font-size:1.2rem;letter-spacing:1.2rem;line-height:1;
+  user-select:none;
+}
+
+.ch-num-block{
+  display:flex;align-items:baseline;gap:1.4rem;
+  margin-bottom:1.6rem;
+}
+.ch-num{
+  font-family:var(--serif);font-size:5rem;line-height:0.85;
+  color:var(--ink);transition:color 0.3s;
+}
+.ch-num-of{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;
+  color:var(--ink-mute);text-transform:uppercase;
+}
+.chapter.sev-crit .ch-num{color:var(--crit);}
+.chapter.sev-high .ch-num{color:var(--high);}
+.chapter.sev-med .ch-num{color:var(--med);}
+
+.ch-meta{
+  display:flex;align-items:center;gap:0.7rem;flex-wrap:wrap;
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.13em;
+  text-transform:uppercase;margin-bottom:1.4rem;color:var(--ink-mute);
+}
+.ch-target{color:var(--ink-dim);}
+.ch-host{color:var(--ink-mute);}
+.ch-sep{color:rgba(236,232,223,0.18);}
+.ch-sev{
+  padding:0.2rem 0.5rem;border:1px solid currentColor;border-radius:3px;
+}
+.ch-sev.crit{color:var(--crit);}
+.ch-sev.high{color:var(--high);}
+.ch-sev.med{color:var(--med);}
+.ch-sev.low{color:var(--low);}
+
+.ch-title{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2rem,4.6vw,3.1rem);
+  line-height:1.05;letter-spacing:-0.018em;
+  margin-bottom:2.4rem;color:var(--ink);
+}
+.ch-title em{font-style:italic;color:var(--ink-dim);}
+
+.ch-body{
+  font-family:var(--serif);font-size:1.2rem;line-height:1.7;
+  color:var(--ink-soft);margin-bottom:2.2rem;
+}
+.ch-body p{margin-bottom:1.3rem;}
+.ch-body p:last-child{margin-bottom:0;}
+.ch-body p:first-child::first-letter{
+  font-family:var(--serif);font-style:italic;
+  font-size:3.6rem;line-height:0.8;
+  color:var(--ink);
+  float:left;margin:0.25rem 0.55rem 0 0;
+  padding-top:0.1rem;
+}
+.ch-body code{
+  font-family:var(--mono);font-size:0.85em;
+  color:var(--ink);
+  padding:0.05rem 0.25rem;border-radius:2px;
+  background:rgba(236,232,223,0.05);
+}
+
+.ch-evidence{
+  border-left:1px solid var(--line);
+  padding:0.4rem 0 0.4rem 1.4rem;margin:2rem 0;
+  background:linear-gradient(to right,rgba(236,232,223,0.015),transparent 80%);
+}
+.ch-evidence-label{
+  display:block;font-family:var(--mono);font-size:0.52rem;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-mute);margin-bottom:0.5rem;
+}
+.ch-evidence code{
+  font-family:var(--mono);font-size:0.82rem;
+  color:var(--ink);word-break:break-all;line-height:1.5;
+}
+.chapter.sev-crit .ch-evidence{border-left-color:rgba(255,107,91,0.35);}
+.chapter.sev-high .ch-evidence{border-left-color:rgba(255,162,87,0.3);}
+.chapter.sev-med .ch-evidence{border-left-color:rgba(255,213,117,0.25);}
+
+.ch-footer{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.6rem;
+  padding-top:1.6rem;margin-top:1.6rem;
+  border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.13em;
+  color:var(--ink-mute);text-transform:uppercase;
+}
+.ch-writeup{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--ink-dim);text-decoration:none;
+  padding-bottom:0.2rem;border-bottom:1px solid rgba(236,232,223,0.2);
+  transition:color 0.25s,border-color 0.25s;
+  margin-left:auto;
+}
+.ch-writeup:hover{color:var(--ink);border-bottom-color:var(--ink);}
+
+/* ━━━━━━━━━━ TABLE OF CONTENTS OVERLAY ━━━━━━━━━━ */
+.toc{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(10,10,12,0.96);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  opacity:0;pointer-events:none;transition:opacity 0.35s;
+  overflow-y:auto;
+}
+.toc.open{opacity:1;pointer-events:auto;}
+.toc-inner{
+  max-width:780px;width:100%;margin:0 auto;
+  padding:6rem 2rem 4rem;
+}
+.toc-h{
+  font-family:var(--serif);font-size:2.4rem;font-weight:400;
+  margin-bottom:0.4rem;
+}
+.toc-h em{font-style:italic;color:var(--ink-dim);}
+.toc-sub{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;
+  color:var(--ink-mute);text-transform:uppercase;margin-bottom:3rem;
+}
+.toc-list{list-style:none;}
+.toc-list a{
+  display:grid;
+  grid-template-columns:3.2rem 1fr auto;
+  gap:1.5rem;align-items:baseline;
+  padding:0.9rem 0;border-bottom:1px solid var(--line);
+  color:var(--ink-dim);text-decoration:none;
+  transition:color 0.25s,padding-left 0.25s,border-color 0.25s;
+}
+.toc-list a:hover{
+  color:var(--ink);padding-left:0.6rem;
+  border-bottom-color:rgba(236,232,223,0.2);
+}
+.tc-n{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.08em;color:var(--ink-mute);}
+.toc-list a:hover .tc-n{color:var(--ink-dim);}
+.tc-meta{display:flex;flex-direction:column;gap:0.2rem;}
+.tc-t{font-family:var(--serif);font-size:1.08rem;line-height:1.3;}
+.tc-tg{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-mute);}
+.tc-s{
+  font-family:var(--mono);font-size:0.54rem;letter-spacing:0.14em;text-transform:uppercase;
+  padding:0.18rem 0.45rem;border:1px solid currentColor;border-radius:3px;
+  align-self:center;
+}
+.tc-s.crit{color:var(--crit);}
+.tc-s.high{color:var(--high);}
+.tc-s.med{color:var(--med);}
+.toc-close{
+  position:fixed;top:1.4rem;right:2rem;z-index:201;
+  background:none;border:1px solid var(--line);color:var(--ink-dim);
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;
+  padding:0.5rem 1rem;border-radius:30px;cursor:pointer;text-transform:uppercase;
+  transition:color 0.25s,border-color 0.25s;
+}
+.toc-close:hover{color:var(--ink);border-color:rgba(236,232,223,0.35);}
+
+/* ━━━━━━━━━━ COLOPHON ━━━━━━━━━━ */
+.colophon{
+  max-width:640px;margin:6rem auto 0;
+  padding:8rem 2rem 6rem;
+  border-top:1px solid var(--line);text-align:center;
+}
+.colophon-ornament{
+  font-family:var(--serif);font-size:1.6rem;letter-spacing:1.4rem;
+  color:var(--ink-mute);margin-bottom:2.5rem;
+}
+.colophon h3{
+  font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:clamp(2rem,5vw,3rem);line-height:1.15;letter-spacing:-0.015em;
+  margin-bottom:1.8rem;color:var(--ink);
+}
+.colophon p{
+  font-family:var(--serif);font-size:1.1rem;line-height:1.65;
+  color:var(--ink-dim);max-width:48ch;margin:0 auto 1.3rem;
+}
+.colophon-links{
+  display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;
+  margin-top:3rem;
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;
+  text-transform:uppercase;
+}
+.colophon-links a{
+  color:var(--ink-dim);text-decoration:none;
+  padding-bottom:0.3rem;border-bottom:1px solid var(--line);
+  transition:color 0.25s,border-color 0.25s;
+}
+.colophon-links a:hover{color:var(--ink);border-bottom-color:var(--ink);}
+
+/* ━━━━━━━━━━ RESPONSIVE ━━━━━━━━━━ */
+@media(max-width:960px){.rail{display:none;}}
+
+@media(max-width:680px){
+  .topbar{padding:1rem 1.2rem;font-size:0.56rem;}
+  .topbar button{font-size:0.56rem;}
+  .titlepage{padding:4.5rem 1.4rem 2rem;min-height:100svh;}
+  .tp-corners{top:3.8rem;left:1.2rem;right:1.2rem;font-size:0.52rem;}
+  .tp-title{font-size:clamp(2.6rem,10vw,5rem);letter-spacing:-0.02em;}
+  .tp-title-2{font-size:clamp(2rem,8vw,3.8rem);}
+  .tp-sub{font-size:1rem;max-width:100%;}
+  .tp-byline{flex-direction:column;align-items:flex-start;gap:0.5rem;}
+  .tp-flourish{letter-spacing:0.4rem;font-size:1.2rem;margin:1.8rem 0 1.5rem;}
+  .preface,.chapter,.colophon{padding-left:1.4rem;padding-right:1.4rem;}
+  .preface{padding-top:5rem;padding-bottom:4rem;}
+  .preface h2{font-size:clamp(1.6rem,6vw,2.4rem);}
+  .preface p{font-size:1rem;}
+  .preface-stats{grid-template-columns:1fr 1fr;gap:1rem;}
+  .ps-v{font-size:1.8rem;}
+  .chapter{padding:3rem 1.4rem;}
+  .ch-num{font-size:3rem;}
+  .ch-num-of{font-size:0.52rem;}
+  .ch-title{font-size:clamp(1.5rem,5.5vw,2.2rem);}
+  .ch-body{font-size:1rem;}
+  .ch-body p:first-child::first-letter{font-size:2.4rem;margin-right:0.4rem;}
+  .ch-meta{font-size:0.52rem;gap:0.5rem;}
+  .ch-evidence{padding:0.4rem 0 0.4rem 1rem;margin:1.4rem 0;}
+  .ch-evidence code{font-size:0.72rem;word-break:break-all;overflow-wrap:anywhere;}
+  .ch-footer{font-size:0.52rem;flex-direction:column;gap:0.4rem;}
+  .ch-writeup{margin-left:0;}
+  .colophon{padding:3.5rem 1.4rem 3rem;}
+  .colophon h3{font-size:clamp(1.6rem,6vw,2.4rem);}
+  .colophon-links{gap:1.4rem;font-size:0.56rem;}
+  .toc-inner{padding:4rem 1.2rem 2.5rem;}
+  .toc-h{font-size:1.8rem;}
+  .toc-list a{grid-template-columns:2.2rem 1fr;gap:0.8rem;padding:0.8rem 0;}
+  .tc-t{font-size:0.95rem;}
+  .tc-s{grid-column:2;justify-self:start;margin-top:0.25rem;}
+  .toc-close{top:1rem;right:1rem;font-size:0.56rem;}
+}
+</style>
+</head>
+<body>
+<div class="bar-top" id="barTop"></div>
+
+<header class="topbar">
+  <a href="index.html"><span class="arrow">←</span> Portfolio</a>
+  <button class="toc-btn" id="tocOpen">Index · 23 ⌗</button>
+</header>
+
+<div class="wrap">
+
+  <!-- ━━━━━━━ TITLE PAGE ━━━━━━━ -->
+  <section class="titlepage">
+    <div class="tp-corners">
+      <span>Padmesh P S</span>
+      <span>MMXXVI</span>
+    </div>
+    <div class="tp-middle">
+      <div class="tp-eyebrow">
+        <span class="line"></span>
+        <span>Field notes</span>
+        <span class="line"></span>
+      </div>
+      <h1 class="tp-title">Seventeen</h1>
+      <div class="tp-title-2">breach reports.</div>
+      <div class="tp-flourish">· · ·</div>
+      <p class="tp-sub">Vulnerabilities I found in production, on real platforms — written as field notes, not reports.</p>
+    </div>
+    <div class="tp-byline">
+      <div class="tp-byline-block">
+        <span>Padmesh P S</span>
+        <span>Security research · 2026</span>
+      </div>
+      <div class="tp-byline-block" style="text-align:right;">
+        <span>Five targets</span>
+        <span>Six months</span>
+      </div>
+    </div>
+    <div class="tp-scroll">⌄ scroll to begin</div>
+  </section>
+
+  <!-- ━━━━━━━ PREFACE ━━━━━━━ -->
+  <section class="preface">
+    <div class="sec-label"><span>Preface</span><span class="dash"></span></div>
+    <h2>Seventeen vulnerabilities. <em>Five production platforms.</em></h2>
+    <p>This is a reader, not a report. The findings ahead were collected between January and June of 2026 across ten production platforms — a state transport corporation, two large e-commerce storefronts, a multi-tenant college ERP, a managed cloud provider, a ride-hailing platform, and others.</p>
+    <p>Some are catastrophic. Most are not. A few are the kind of bug you read three times before you believe it: a CAPTCHA endpoint that returned <em>the answer</em>, a feature-flag service that handed over <em>four hundred toggles</em>, a session ID logged to <em>three CDN providers</em> on every page view.</p>
+    <p>Names are real. Payloads are sanitized. Severities are vendor-aligned. Where a finding caused real platform-wide impact during testing, it is noted. All work was performed under <strong>authorization, program scope, or responsible disclosure.</strong></p>
+    <div class="preface-stats">
+      <div><div class="ps-v">17</div><div class="ps-l">Findings</div></div>
+      <div><div class="ps-v">5</div><div class="ps-l">Targets</div></div>
+      <div><div class="ps-v">3</div><div class="ps-l">Critical</div></div>
+      <div><div class="ps-v">1</div><div class="ps-l">Write-up</div></div>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━ CHAPTERS ━━━━━━━ -->
+  <main class="chapters" id="chapters"></main>
+
+  <!-- ━━━━━━━ COLOPHON ━━━━━━━ -->
+  <section class="colophon">
+    <div class="colophon-ornament">· · ·</div>
+    <h3>The work is the disclosure.</h3>
+    <p>Every finding in this reader was reported to its respective vendor through the channel they advertised — a bug-bounty program, a security@ address, or in two cases, a written assessment with prior authorization.</p>
+    <p>One of the seventeen became a long-form write-up on Medium. The rest live here.</p>
+    <div class="colophon-links">
+      <a href="https://medium.com/@padmesh77123" target="_blank" rel="noopener">Read on Medium</a>
+      <a href="https://github.com/padmesh6119" target="_blank" rel="noopener">GitHub</a>
+      <a href="index.html">← Portfolio</a>
+    </div>
+  </section>
+
+</div>
+
+<!-- ━━━━━━━ READING RAIL ━━━━━━━ -->
+<aside class="rail" id="rail" aria-hidden="true">
+  <div>
+    <div class="rail-num" id="railNum">01</div>
+    <div class="rail-of">of seventeen</div>
+  </div>
+  <div class="rail-bar" id="railBar"></div>
+  <div class="rail-target" id="railTarget">—</div>
+  <span class="rail-sev crit" id="railSev">—</span>
+</aside>
+
+<!-- ━━━━━━━ TOC OVERLAY ━━━━━━━ -->
+<div class="toc" id="toc" role="dialog" aria-modal="true" aria-label="Index">
+  <button class="toc-close" id="tocClose">Close ✕</button>
+  <div class="toc-inner">
+    <h2 class="toc-h"><em>Index</em></h2>
+    <div class="toc-sub">Twenty-three chapters · Tap to jump</div>
+    <ol class="toc-list" id="tocList"></ol>
+  </div>
+</div>
+
+<script>
+const SEVN={crit:"Critical",high:"High",med:"Medium",low:"Low"};
+
+const stories=[
+  {n:1,id:"TN-15",target:"TNSTC",host:"tnstc.in / OTRSOnline",sev:"crit",
+   writeup:"https://medium.com/@padmesh77123/time-based-blind-sql-injection-in-a-government-bus-booking-platform-unauthenticated-access-to-4347c51b467d",
+   title:"The bus that could <em>stop a state</em>.",
+   body:`<p>Five million passenger records sat one BENCHMARK away from anyone who knew where to look. The MySQL account behind the query — <code>ut06@%</code> — held FILE and SUPER privileges, the kind reserved for the database administrator.</p><p>A single time-blind probe confirmed a live passenger PNR, <em>T80558755</em>, present in the haystack. The platform is the booking surface for a state transport corporation. Fifty thousand passengers a day. One unauthenticated request.</p>`,
+   evL:"Probe",evC:"BENCHMARK(5000000, MD5('a')) — txtObRefNo",
+   meta:"CWE-89 / 200 · MySQL 5.7.x · tnstcoprs"},
+
+  {n:2,id:"SK-01",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"crit",
+   title:"No login. No token. <em>Just your phone number.</em>",
+   body:`<p><code>POST /api/userManagement/passwordResetSms/{phone}</code> dispatched an OTP to any registered number with no authentication header, no session, and no rate limit. The endpoint answered 200 for the platform's super admin the same as any student's.</p><p>The password-change endpoint accepted the OTP, skipped knowledge of the current password entirely, and returned a policy error on reuse — confirming the OTP was validated before rejection. Full chain: enumerate admin phone via IDOR, trigger OTP with no auth, receive on the physical device, reset. Admin access in four requests.</p>`,
+   evL:"Trigger (no auth)",evC:"POST /api/userManagement/passwordResetSms/91-9087671162 → 200",
+   meta:"CWE-306 · CVSS 9.6 · confirmed 2026-06-13"},
+
+  {n:3,id:"SK-02",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"crit",
+   title:"Student searches for admin. <em>Admin found. Chain complete.</em>",
+   body:`<p>A student-role session could call the user-search endpoint with any key term and receive accounts regardless of role. Searching <code>admin</code> returned the platform super-admin, the SKCET admin office, and nine department heads — ukids, emails, and phone numbers included.</p><p>Calling <code>/rest/users/userInfo/{ukid}</code> with a student JWT on any of those returned the phone number needed for the OTP reset chain. The server never checked whether the caller outranked the target.</p>`,
+   evL:"Search result (student JWT)",evC:"GET /search/v2?key=admin → collpoll-admin ukid 1408656, phone 91-8867486444",
+   meta:"CWE-639 · CVSS 9.3 · confirmed"},
+
+  {n:4,id:"SK-03",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"crit",
+   title:"Reset link, <em>delivered to the attacker's domain.</em>",
+   body:`<p>The password-reset email flow consumed the <code>X-Forwarded-Host</code> header without validation and used it to construct the reset link's hostname. Injecting an attacker-controlled domain caused every outbound reset email to carry a link pointing off-site.</p><p>Any user who clicked would send their reset token to the attacker before the legitimate server ever saw it — a silent account takeover requiring no other foothold, just the target's registered email address.</p>`,
+   evL:"Injected header",evC:"X-Forwarded-Host: attacker.ngrok.io → reset link domain swapped",
+   meta:"CWE-601 · CVSS 9.1 · email confirmation pending"},
+
+  {n:5,id:"SK-04",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
+   title:"Change anyone's password. <em>Theirs.</em>",
+   body:`<p>The password-change endpoint accepted a <code>ukid</code> path parameter and honored it regardless of whether it matched the authenticated session. Submitting a different student's ukid produced "Incorrect existing password" — not a 403. The server reached the password-validation layer for a foreign account, confirming the authorization check was missing.</p><p>With an admin ukid obtained from the IDOR search endpoint, the same request targeted platform administrators.</p>`,
+   evL:"Request (student JWT, foreign ukid)",evC:"PUT /api/userManagement/change/password/{admin_ukid} → 400 (policy, not 403)",
+   meta:"CWE-639 · CVSS 8.1 · confirmed 2026-06-13"},
+
+  {n:6,id:"SK-05",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
+   title:"Stored XSS. <em>Student-accessible.</em>",
+   body:`<p>The user bio field on the profile page stored arbitrary input and reflected it into the DOM on any profile view without sanitisation. A payload in the bio field persisted across sessions and executed for anyone who loaded the profile — students, staff, or administrators.</p><p>No Content Security Policy was present to contain execution. The attack surface included the admin review panel, where staff routinely viewed student profiles.</p>`,
+   evL:"Stored payload",evC:"bio: <img src=x onerror=alert(document.cookie)> → executes on profile load",
+   meta:"CWE-79 · CVSS 8.0 · stored confirmed"},
+
+  {n:7,id:"CW-01",target:"Cloudways",host:"api.cloudways.com",sev:"high",
+   title:"CORS: credentials=true. <em>Origin: attacker.cloudways.com</em>",
+   body:`<p>Every endpoint under <code>api.cloudways.com/api/v2/</code> reflected any <code>*.cloudways.com</code> subdomain back in <code>Access-Control-Allow-Origin</code> with <code>Access-Control-Allow-Credentials: true</code>. The regex matched the suffix, not the exact allowlist.</p><p>Chained with the subdomain takeover on <code>bootcamp.cloudways.com</code> — a dangling CNAME to an abandoned Zuddl account — an attacker who claimed that subdomain could make fully credentialed cross-origin requests to the entire Cloudways API on behalf of any authenticated user visiting a crafted page.</p>`,
+   evL:"CORS header",evC:"Origin: https://bootcamp.cloudways.com → ACAO: https://bootcamp.cloudways.com + ACAC: true",
+   meta:"CWE-942 · CVSS 8.3 · chain: CORS + subdomain takeover"},
+
+  {n:8,id:"ZM-01",target:"Zomato",host:"enterprise.zomato.com",sev:"high",
+   title:"The four-digit <em>gift card key</em>.",
+   body:`<p>Three secrets traveled hand-in-hand inside Zomato's enterprise JavaScript bundle. <code>REACT_APP_ZOMATO_API_KEY</code>. <code>AUTH_CLIENT_ID</code>. And, sitting beside them — uncommented, unobfuscated, in production — the punchline.</p><p>Any visitor to the enterprise portal could read the credentials without authentication. The gift card key in particular represented direct financial impact — any party holding it could forge or validate gift card operations against the production system.</p>`,
+   evL:"Hardcoded value",evC:"GIFT_CARD_HASH_KEY = 1234123412341234",
+   meta:"CWE-798 · CVSS 8.2 · main.js bundle"},
+
+  {n:9,id:"ID-01",target:"InDrive",host:"coaching.supernovas.indrive.com",sev:"high",
+   title:"Webshell uploaded. <em>Stored. Accessible. Waiting.</em>",
+   body:`<p>The TutorLMS plugin on InDrive's Supernovas education platform validated uploaded files by MIME type only — not by content. PHP webshells, GIF-PHP polyglots, and JPEG-PHP polyglots all passed the check and were stored at publicly accessible paths returned by the WordPress media API.</p><p>The REST endpoint <code>/wp-json/wp/v2/media</code> returned all uploaded files without authentication. Multiple shells — including <code>shell.php</code>, <code>shell.gif</code>, and SVG-XSS payloads — were confirmed stored on the server and reachable by anyone with the URL.</p>`,
+   evL:"Stored file",evC:"POST /wp-json/wp/v2/media → shell.php at /wp-content/uploads/",
+   meta:"CWE-434 · CVSS 7.5 · PHP exec pending server config"},
+
+  {n:10,id:"SK-06",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
+   title:"CORS: any origin. <em>Credentials included.</em>",
+   body:`<p>The API reflected arbitrary <code>Origin</code> headers back in <code>Access-Control-Allow-Origin</code> and paired them with <code>Access-Control-Allow-Credentials: true</code>. No allowlist. No validation.</p><p>Any page on any domain could issue cross-origin authenticated requests on behalf of a logged-in student or staff member. Auth tokens in cookies were included automatically, making the full API surface — including admin search and userInfo endpoints — reachable cross-origin from any attacker page.</p>`,
+   evL:"CORS response",evC:"Origin: https://evil.example → ACAO: https://evil.example + ACAC: true",
+   meta:"CWE-942 · CVSS 8.1 · confirmed"},
+
+  {n:11,id:"SK-07",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
+   title:"Unauthenticated reset trigger. <em>No auth. No rate limit.</em>",
+   body:`<p>The email-based password reset trigger required no authentication and enforced no rate limit. Back-to-back requests to <code>POST /api/userManagement/forgotPassword/{email}</code> returned 200 indefinitely, dispatching a fresh OTP each time and invalidating the previous one.</p><p>Unauthenticated trigger with no lockout and no CAPTCHA allowed continuous OTP cycling against any account. The admin email was publicly discoverable via the IDOR chain, making this a direct path to admin account compromise.</p>`,
+   evL:"Rate-limit test",evC:"POST /forgotPassword/office@skcet.ac.in × 5 → 200 × 5, new OTP each",
+   meta:"CWE-307 · CVSS 7.5 · confirmed"},
+
+  {n:12,id:"ZM-02",target:"Zomato",host:"zwstatic.zomato.com / S3",sev:"med",
+   title:"Five years of bundles. <em>Publicly indexed.</em>",
+   body:`<p>The S3 bucket backing Zomato's CDN at <code>zwstatic.zomato.com</code> had public listing enabled. An unauthenticated GET to the bucket root returned an XML manifest of every object stored — JavaScript bundles, source assets, and build artifacts dating back to 2021.</p><p>Historical bundles are a reconnaissance goldmine: older code often contains secrets that have since been rotated from the live bundle but remain readable in the archive. The listing also maps the full asset naming convention and deployment cadence.</p>`,
+   evL:"Listing URL",evC:"GET https://zweb.zomato.com/ → XML · 5 years of JS bundles enumerated",
+   meta:"CWE-732 · CVSS 5.3 · public bucket listing"},
+
+  {n:13,id:"ID-02",target:"InDrive",host:"indrive.mediator.cloud",sev:"med",
+   title:"og:url, <em>unescaped. No CSP.</em>",
+   body:`<p>The awards platform at <code>indrive.mediator.cloud</code> reflected the raw request URL into the <code>og:url</code> meta tag content attribute without HTML-encoding the double-quote character. Breaking out of the attribute context with <code>"&gt;</code> injected arbitrary HTML into the page head.</p><p>With no Content-Security-Policy header present, inline scripts executed without restriction. The attack required a crafted URL delivered to a victim — one click, no stored persistence needed.</p>`,
+   evL:"Payload",evC:`/awards/">&lt;script&gt;alert(1)&lt;/script&gt; → executes in head`,
+   meta:"CWE-79 · CVSS 6.1 · reflected XSS · no CSP"},
+
+  {n:14,id:"ID-03",target:"InDrive",host:"indrive.mediator.cloud",sev:"med",
+   title:"CSRF. <em>SameSite=None. No token.</em>",
+   body:`<p>The awards platform set its session cookie with <code>SameSite=None; Secure</code> and no <code>HttpOnly</code> flag. No CSRF token was present on any state-changing POST endpoint. Cross-site requests from any attacker-controlled page carried the victim's session automatically.</p><p>An attacker could silently award points, submit nominations, or modify recognition records on behalf of any authenticated InDrive employee who visited a crafted page — no interaction beyond the page load required.</p>`,
+   evL:"Cookie flags",evC:"mediator_session: SameSite=None; Secure — no CSRF token on POST endpoints",
+   meta:"CWE-352 · CVSS 6.5"},
+
+  {n:15,id:"ID-04",target:"InDrive",host:"teammate.indriver.io",sev:"med",
+   title:"Internal HR platform. <em>Public. No auth challenge.</em>",
+   body:`<p><code>teammate.indriver.io</code> served a full React SPA for InDrive's internal HR and employee-management system to unauthenticated visitors. The HTML, JS bundles, and all assets loaded without any login wall or redirect.</p><p>The GraphQL backend at <code>/query</code> returned 403 without a valid JWT — but the frontend exposed the full schema, all operation names, and internal tooling identifiers simply by loading the page. A complete map of the internal HR attack surface, delivered unauthenticated on request.</p>`,
+   evL:"Unauthenticated load",evC:"GET teammate.indriver.io → 200 · full HR SPA · GraphQL schema in JS",
+   meta:"CWE-306 · CVSS 5.3 · surface exposure"},
+
+  {n:16,id:"CW-02",target:"Cloudways",host:"bootcamp.cloudways.com",sev:"low",
+   title:"Dangling CNAME. <em>Subdomain up for grabs.</em>",
+   body:`<p><code>bootcamp.cloudways.com</code> held a CNAME to a Zuddl whitelabel subdomain returning 404. The Cloudways account on Zuddl appeared expired or deleted.</p><p>An attacker who registered the same whitelabel path on Zuddl would gain control of a <code>*.cloudways.com</code> subdomain. Chained with the CORS wildcard-suffix match on <code>api.cloudways.com</code>, this converts a dangling DNS record into a fully credentialed API takeover vector.</p>`,
+   evL:"DNS",evC:"bootcamp.cloudways.com CNAME → zuddl-wl.*.app → 404 Not Found",
+   meta:"CWE-350 · standalone low · critical when chained with CW-01"},
+
+  {n:17,id:"ZM-03",target:"Zomato",host:"enterprise.zomato.com",sev:"low",
+   title:"Source map. <em>Full enterprise tree, public.</em>",
+   body:`<p>The production JavaScript source map for Zomato's enterprise portal was publicly accessible at the standard <code>.map</code> path. Source maps reverse the minification: every original filename, directory structure, and line of pre-build source code is recoverable.</p><p>The file exposed the full internal project tree, component naming conventions, and business logic pathways of a platform handling enterprise B2B orders — without authentication, from a single HTTP GET.</p>`,
+   evL:"Source map URL",evC:"GET /static/js/main.ba8c4bf7.js.map → 200 · full source tree",
+   meta:"CWE-540 · CVSS 4.3"},
+];
+
+/* render chapters */
+const wrap=document.getElementById('chapters');
+wrap.innerHTML=stories.map((s,i)=>{
+  const divider = i>0 && i%5===0 ? `<div class="ch-divider">·  ·  ·</div>` : '';
+  const num=String(s.n).padStart(2,'0');
+  return `${divider}<article class="chapter sev-${s.sev}" id="ch-${s.n}" data-n="${s.n}" data-sev="${s.sev}" data-target="${s.target}">
+    <div class="ch-num-block">
+      <span class="ch-num">${num}</span>
+      <span class="ch-num-of">of seventeen</span>
+    </div>
+    <div class="ch-meta">
+      <span class="ch-target">${s.target}</span>
+      <span class="ch-sep">·</span>
+      <span class="ch-host">${s.host}</span>
+      <span class="ch-sep">·</span>
+      <span class="ch-sev ${s.sev}">${SEVN[s.sev]}</span>
+    </div>
+    <h2 class="ch-title">${s.title}</h2>
+    <div class="ch-body">${s.body}</div>
+    <div class="ch-evidence">
+      <span class="ch-evidence-label">${s.evL}</span>
+      <code>${s.evC}</code>
+    </div>
+    <div class="ch-footer">
+      <span>${s.id}</span>
+      <span>${s.meta}</span>
+      ${s.writeup?`<a class="ch-writeup" href="${s.writeup}" target="_blank" rel="noopener">Read write-up ↗</a>`:''}
+    </div>
+  </article>`;
+}).join('');
+
+/* TOC */
+document.getElementById('tocList').innerHTML=stories.map(s=>`
+  <li><a href="#ch-${s.n}">
+    <span class="tc-n">${String(s.n).padStart(2,'0')}</span>
+    <span class="tc-meta">
+      <span class="tc-t">${s.title.replace(/<\/?em>/g,'')}</span>
+      <span class="tc-tg">${s.target} · ${s.id}</span>
+    </span>
+    <span class="tc-s ${s.sev}">${SEVN[s.sev]}</span>
+  </a></li>
+`).join('');
+
+/* reveal on scroll */
+const revObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.chapter').forEach(c=>revObs.observe(c));
+
+/* rail tracking */
+const rail=document.getElementById('rail');
+const railNum=document.getElementById('railNum');
+const railBar=document.getElementById('railBar');
+const railTarget=document.getElementById('railTarget');
+const railSev=document.getElementById('railSev');
+const chWrap=document.getElementById('chapters');
+
+const chShow=new IntersectionObserver(es=>{
+  es.forEach(e=>rail.classList.toggle('on',e.isIntersecting));
+},{threshold:0,rootMargin:'-30% 0px -30% 0px'});
+chShow.observe(chWrap);
+
+const railObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting && e.intersectionRatio>0.25){
+      const n=+e.target.dataset.n;
+      const sev=e.target.dataset.sev;
+      railNum.textContent=String(n).padStart(2,'0');
+      railNum.style.color=({crit:'#ff6b5b',high:'#ffa257',med:'#ffd575',low:'#7ab8ff'})[sev];
+      railTarget.textContent=e.target.dataset.target;
+      railSev.textContent=SEVN[sev];
+      railSev.className='rail-sev '+sev;
+      railBar.style.setProperty('--p',`${(n/stories.length)*100}%`);
+    }
+  });
+},{threshold:[0.25,0.6],rootMargin:'-25% 0px -45% 0px'});
+document.querySelectorAll('.chapter').forEach(c=>railObs.observe(c));
+
+/* scroll progress */
+const bt=document.getElementById('barTop');
+let raf;
+addEventListener('scroll',()=>{
+  if(raf)return;
+  raf=requestAnimationFrame(()=>{
+    const max=document.documentElement.scrollHeight-innerHeight;
+    bt.style.setProperty('--p',`${(scrollY/max)*100}%`);
+    raf=null;
+  });
+},{passive:true});
+
+/* TOC overlay */
+const toc=document.getElementById('toc');
+const tocOpen=document.getElementById('tocOpen');
+const tocClose=document.getElementById('tocClose');
+const setT=v=>toc.classList.toggle('open',v);
+tocOpen.addEventListener('click',()=>setT(true));
+tocClose.addEventListener('click',()=>setT(false));
+toc.addEventListener('click',e=>{
+  if(e.target===toc) setT(false);
+  if(e.target.closest('a')) setTimeout(()=>setT(false),100);
+});
+addEventListener('keydown',e=>{
+  if(e.key==='Escape') setT(false);
+  if((e.key==='i'||e.key==='I') && !e.metaKey && !e.ctrlKey) setT(!toc.classList.contains('open'));
+});
+</script>
+</body>
+</html>

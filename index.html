@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Padmesh | Cybersecurity Analyst & Penetration Tester</title>
+<meta name="description" content="Padmesh — Cybersecurity professional, penetration tester, and web engineer. Portfolio of offensive security, internships, and projects.">
+<meta property="og:title" content="Padmesh | Cybersecurity Analyst">
+<meta property="og:description" content="Offensive security, bug hunting, and web development — portfolio of Padmesh.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gl-matrix@3.4.3/gl-matrix-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- DETAIL MODAL -->
+<div id="detailModal">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-img-panel" id="modalImgPanel">
+      <img id="modalImg" src="" alt="">
+      <div class="modal-img-cat" id="modalImgCat"></div>
+    </div>
+    <div class="modal-content-panel">
+      <div class="modal-tag" id="modalTag"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-sub" id="modalSub"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-tags" id="modalTagsEl"></div>
+      <a class="modal-link" id="modalLink" href="#" target="_blank"></a>
+    </div>
+  </div>
+</div>
+
+<!-- CURSOR -->
+<div class="tc-wrap" id="tcW">
+  <div class="tc-dot" id="tcD"></div>
+  <div class="tc-c tc-tl" id="tcTL"></div>
+  <div class="tc-c tc-tr" id="tcTR"></div>
+  <div class="tc-c tc-br" id="tcBR"></div>
+  <div class="tc-c tc-bl" id="tcBL"></div>
+</div>
+
+<!-- Popups -->
+<div class="intern-preview" id="internPrev"><img id="iPrevImg" src="" alt=""><div class="intern-preview-label" id="iPrevLbl"></div></div>
+<div class="proj-preview-popup" id="projPrev"><canvas id="pPrevC" width="280" height="190"></canvas></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-ball-wrap">
+    <canvas id="loaderBallCanvas" width="64" height="64"></canvas>
+    <div class="loader-ball-outer"></div>
+  </div>
+  <div class="lc"><span class="lc-num" id="ln">0</span><span class="lc-pct">%</span></div>
+</div>
+<div id="lb"></div>
+
+<!-- SITE -->
+<div id="site">
+
+<nav class="side-nav" aria-label="Section navigation">
+  <button class="sn-dot" data-n="0" aria-label="Hero"></button>
+  <button class="sn-dot" data-n="1" aria-label="About"></button>
+  <button class="sn-dot" data-n="2" aria-label="Skills"></button>
+  <button class="sn-dot" data-n="3" aria-label="Internships"></button>
+  <button class="sn-dot" data-n="4" aria-label="Experience"></button>
+  <button class="sn-dot" data-n="5" aria-label="Certifications"></button>
+  <button class="sn-dot" data-n="6" aria-label="Projects"></button>
+  <button class="sn-dot" data-n="7" aria-label="Breach Log"></button>
+  <button class="sn-dot" data-n="8" aria-label="About & Resume"></button>
+  <button class="sn-dot" data-n="9" aria-label="Contact"></button>
+</nav>
+
+<div id="sc">
+
+  <!-- P1 HERO -->
+  <section class="page-section" id="p1">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
+    <div class="hero-body">
+      <div class="tw-wrap"><span class="tw-line" id="twLine"><span class="tw-cursor"></span></span></div>
+    </div>
+    <div class="scroll-hint" id="scrollHint">
+      <div class="mouse-icon"><div class="mouse-wheel"></div></div>
+      <span class="scroll-label">Scroll down</span>
+    </div>
+  </section>
+
+  <!-- P2 ABOUT -->
+  <section class="page-section" id="p2">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="02 — ABOUT ME">02 — ABOUT ME</div>
+    <div class="about-left anim-el" style="transition-delay:.1s">
+      <div class="about-tag">About me</div>
+      <p class="about-text">
+        A cybersecurity mind with a terminal,<br>
+        a restless curiosity, and an <em>obsession</em><br>
+        for breaking systems apart<br>
+        just to understand them deeper.
+      </p>
+      <div class="about-divider"></div>
+      <p class="about-text2">
+        It's not just security — it's perspective.<br>
+        I explore, exploit, and evolve with intent.<br>
+        Curious? Always. Relentless? Absolutely
+      </p>
+    </div>
+    <div class="about-right anim-el" style="transition-delay:.28s">
+      <img src="https://portfolio-ik2h.onrender.com/src/assets/images/me.jpeg" alt="Padmesh" class="about-photo" onerror="this.style.background='rgba(255,255,255,0.03)'">
+    </div>
+  </section>
+
+  <!-- P3 FLOWING MENU (Skills) -->
+  <section class="page-section" id="p3">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="03 — SKILLS ARSENAL">03 — SKILLS ARSENAL</div>
+    <ul class="menu" id="flowMenu"></ul>
+  </section>
+
+  <!-- P4 INTERNSHIPS -->
+  <section class="page-section" id="p4">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="04 — INTERNSHIPS">04 — INTERNSHIPS</div>
+    <div class="intern-left anim-el" style="transition-delay:.08s">
+      <div class="intern-eyebrow">Experience</div>
+      <div class="intern-big">Real<span>World</span>Work.</div>
+      <p class="intern-sub">Hands-on offensive security, forensics, and hardware — not just theory. These shaped how I think.</p>
+      <div class="intern-stat-row">
+        <div class="intern-stat"><div class="intern-stat-num">5</div><div class="intern-stat-label">Internships</div></div>
+        <div class="intern-stat"><div class="intern-stat-num">Top 1%</div><div class="intern-stat-label">TryHackMe</div></div>
+        <div class="intern-stat"><div class="intern-stat-num">12+</div><div class="intern-stat-label">Certifications</div></div>
+      </div>
+    </div>
+    <div class="intern-right anim-el" style="transition-delay:.22s">
+      <div class="intern-card cursor-target" data-preview="assets/Police station intern.png" data-label="Police Cyber Department">
+        <div class="intern-card-fill"></div>
+        <div class="intern-card-inner"><div class="intern-card-num">01</div><div class="intern-card-body"><div class="intern-card-role">Cyber Forensics Intern</div><div class="intern-card-org">Police Cyber Department</div></div><div class="intern-card-tag">Forensics</div></div>
+      </div>
+      <div class="intern-card cursor-target" data-preview="assets/Hactify.png" data-label="Hacktify Cyber Security">
+        <div class="intern-card-fill"></div>
+        <div class="intern-card-inner"><div class="intern-card-num">02</div><div class="intern-card-body"><div class="intern-card-role">Penetration Testing Intern</div><div class="intern-card-org">Hacktify Cyber Security</div></div><div class="intern-card-tag">Offensive Sec</div></div>
+      </div>
+      <div class="intern-card cursor-target" data-preview="assets/Human initials.png" data-label="Human Initials">
+        <div class="intern-card-fill"></div>
+        <div class="intern-card-inner"><div class="intern-card-num">03</div><div class="intern-card-body"><div class="intern-card-role">Penetration Tester Intern</div><div class="intern-card-org">Human Initials</div></div><div class="intern-card-tag">Pen Testing</div></div>
+      </div>
+      <div class="intern-card cursor-target" data-preview="assets/under.png" data-label="BCBUZZ">
+        <div class="intern-card-fill"></div>
+        <div class="intern-card-inner"><div class="intern-card-num">04</div><div class="intern-card-body"><div class="intern-card-role">VAPT Intern</div><div class="intern-card-org">BCBUZZ</div></div><div class="intern-card-tag">VAPT</div></div>
+      </div>
+      <div class="intern-card cursor-target" data-preview="assets/TryHackme.png" data-label="TryHackMe — Top 1%">
+        <div class="intern-card-fill"></div>
+        <div class="intern-card-inner"><div class="intern-card-num">05</div><div class="intern-card-body"><div class="intern-card-role">Top 1% Global Rank</div><div class="intern-card-org">TryHackMe</div></div><div class="intern-card-tag">Top 1%</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEXP EXPERIENCE -->
+  <section class="page-section" id="pExp">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="05 — EXPERIENCE">05 — EXPERIENCE</div>
+    <div class="exp-spline-wrap">
+      <spline-viewer
+        url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+        events-target="global"
+        loading="lazy"
+        style="width:100%;height:100%;">
+      </spline-viewer>
+    </div>
+    <div class="exp-vign"></div>
+    <div class="exp-ring">
+      <div class="xcard" data-xp="0">
+        <div class="xcard-cat">Systems</div>
+        <div class="xcard-title">OS Management</div>
+        <div class="xcard-preview">Arch, Debian, Kali, Ubuntu — daily use, not just installs.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="1">
+        <div class="xcard-cat">Security</div>
+        <div class="xcard-title">Offensive Security &amp; CTF</div>
+        <div class="xcard-preview">Web exploitation, priv-esc, crypto, networking labs.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="2">
+        <div class="xcard-cat">Tools</div>
+        <div class="xcard-title">Security Tooling</div>
+        <div class="xcard-preview">Real use, not demos — how tools fail in the wild.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="3">
+        <div class="xcard-cat">Hardware</div>
+        <div class="xcard-title">Diagnostics &amp; Repair</div>
+        <div class="xcard-preview">Dedcell — faulty components, OS-level hardware issues.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="4">
+        <div class="xcard-cat">AI</div>
+        <div class="xcard-title">Applied AI &amp; Models</div>
+        <div class="xcard-preview">Custom + obliterated models. Making them actually run.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="5">
+        <div class="xcard-cat">Web</div>
+        <div class="xcard-title">Web Design &amp; Dev</div>
+        <div class="xcard-preview">Built from scratch — layout, perf, security, interaction.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="6">
+        <div class="xcard-cat">UX</div>
+        <div class="xcard-title">System Ricing &amp; Workflow</div>
+        <div class="xcard-preview">WMs, terminals, keybindings, automation — fast &amp; personal.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+      <div class="xcard" data-xp="7">
+        <div class="xcard-cat">Research</div>
+        <div class="xcard-title">Vulnerability Research</div>
+        <div class="xcard-preview">Bug hunting, API security, responsible disclosure.</div>
+        <div class="xcard-click-hint">Read more</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P5 CERTIFICATIONS -->
+  <section class="page-section" id="p5">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="05 — CERTIFICATIONS">05 — CERTIFICATIONS</div>
+    <canvas id="certCanvas"></canvas>
+    <div class="cert-hud-tl">
+      <div class="cert-hud-num" id="certHudNum">19</div>
+      <div class="cert-hud-label" id="certHudLabel">credentials earned</div>
+    </div>
+    <div class="cert-focus" id="certFocus">
+      <div class="cf-issuer" id="cfIssuer"></div>
+      <div class="cf-name" id="cfName"></div>
+      <div class="cf-year" id="cfYear"></div>
+      <div class="cf-rule"></div>
+      <div class="cf-hint">move cursor to explore</div>
+    </div>
+    <div class="cert-filters-bar" id="certFiltersBar"></div>
+    <div class="cert-total-badge" id="certTotalBadge">30 total</div>
+    <div class="cert-mobile-list" id="certMobileList"></div>
+    <div class="cert-tap-hint" id="certTapHint">tap a node to explore</div>
+  </section>
+
+<!-- P7 PROJECTS — THE BREACH REPORT -->
+<section class="page-section" id="p6">
+  <div class="fade-in-layer"></div>
+  <div class="scan2"></div>
+  <div class="page-title" data-decrypt="07 — PROJECTS">07 — PROJECTS</div>
+
+  <div class="finder-host anim-el" style="transition-delay:.15s">
+    <div class="finder-window" id="finderWindow">
+
+      <div class="titlebar">
+        <div class="traffic-lights">
+          <div class="tl tl-close"></div>
+          <div class="tl tl-min"></div>
+          <div class="tl tl-max"></div>
+        </div>
+        <div class="window-title">The Breach Report — Projects</div>
+      </div>
+
+      <div class="toolbar">
+        <div class="tb-nav">
+          <button class="tb-btn"><i class="ti ti-chevron-left" style="font-size:13px"></i></button>
+          <button class="tb-btn"><i class="ti ti-chevron-right" style="font-size:13px"></i></button>
+        </div>
+        <div class="tb-divider"></div>
+        <div class="breadcrumb">
+          <span>breach-report</span>
+          <span class="breadcrumb-sep">›</span>
+          <span class="breadcrumb-active">projects</span>
+        </div>
+        <div class="tb-view">
+          <button class="tb-btn" style="color:#3A3A3A;background:rgba(0,0,0,0.08)">
+            <i class="ti ti-layout-grid" style="font-size:13px"></i>
+          </button>
+          <button class="tb-btn"><i class="ti ti-list" style="font-size:13px"></i></button>
+        </div>
+      </div>
+
+      <div class="finder-body">
+        <div class="finder-sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-header">Favourites</div>
+            <div class="sidebar-item active" onclick="setSidebarActive(this)"><i class="ti ti-folder"></i><span>Projects</span></div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-clock"></i><span>Recent</span></div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-star"></i><span>Starred</span></div>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-header">Categories</div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-shield-lock"></i><span>Auth</span></div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-bug"></i><span>Security</span></div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-cpu"></i><span>Hardware</span></div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-terminal"></i><span>Tools</span></div>
+            <div class="sidebar-item" onclick="setSidebarActive(this)"><i class="ti ti-code"></i><span>In Dev</span></div>
+          </div>
+        </div>
+
+        <div class="finder-file-area">
+          <div class="file-grid" id="fileGrid"></div>
+        </div>
+
+        <div class="finder-preview" id="previewPanel">
+          <div class="preview-empty" id="previewEmpty">
+            <i class="ti ti-folder-open"></i>
+            <p>Click a project to inspect</p>
+          </div>
+          <div class="preview-header" id="previewHeader" style="display:none">
+            <div class="preview-title" id="previewName"></div>
+          </div>
+          <div class="preview-content" id="previewContent" style="display:none">
+            <i class="preview-big-icon ti" id="previewIcon"></i>
+            <div class="preview-desc" id="previewDesc"></div>
+            <div class="preview-tags" id="previewTags"></div>
+            <div class="preview-meta" id="previewMeta"></div>
+          </div>
+          <div class="preview-open-wrap" id="previewOpenBtn" style="display:none">
+            <a class="finder-open-btn" id="openBtn" href="#" target="_blank">Open Project ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="finder-statusbar">
+        <div class="finder-status-text" id="statusText">8 items</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+  <!-- P8 DISCLOSURES — MAGAZINE COVER -->
+  <section class="page-section" id="pFindings">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="08 — BREACH LOG">08 — BREACH LOG</div>
+
+    <div class="ds-wrap anim-el" style="transition-delay:.12s">
+
+      <div class="ds-feature">
+        <div class="ds-issue">
+          <span>Vol. I</span>
+          <span class="ds-dot">·</span>
+          <span>2026</span>
+          <span class="ds-dot">·</span>
+          <span class="ds-stamp-wrap"><span class="ds-stamp" id="dsStamp">REPORTED</span><canvas class="ds-dust-canvas" id="dsDust" aria-hidden="true"></canvas></span>
+        </div>
+
+        <h2 class="ds-headline">
+          <span class="ds-line ds-line-1" id="dsL1">Five million records,</span>
+          <span class="ds-line ds-line-2" id="dsL2"><em>one BENCHMARK away.</em></span>
+        </h2>
+
+        <div class="ds-attr">
+          <span class="ds-attr-id" id="dsAttrId">TN-15</span>
+          <span class="ds-dot">·</span>
+          <span class="ds-attr-tg" id="dsAttrTg">TNSTC · State Transport</span>
+          <span class="ds-dot">·</span>
+          <span class="ds-attr-sev crit" id="dsAttrSev">Critical</span>
+        </div>
+
+        <div class="ds-pager" id="dsPager"></div>
+
+        <div class="ds-cta-row">
+          <a href="research.html" class="ds-cta">
+            <span class="ds-cta-t">Open the reader</span>
+            <span class="ds-cta-arr">↗</span>
+          </a>
+          <div class="ds-cta-meta">17 findings · 5 targets · ~9 min</div>
+        </div>
+      </div>
+
+      <aside class="ds-side">
+        <div class="ds-stats">
+          <div class="ds-stat"><span class="ds-stat-v">17</span><span class="ds-stat-l">findings</span></div>
+          <div class="ds-stat"><span class="ds-stat-v">05</span><span class="ds-stat-l">targets</span></div>
+          <div class="ds-stat"><span class="ds-stat-v">03</span><span class="ds-stat-l">critical</span></div>
+        </div>
+
+        <div class="ds-hits-h">
+          <span>Featured</span>
+          <span class="ds-hits-line"></span>
+        </div>
+
+        <div class="ds-hits" id="dsHits"></div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- P9 ABOUT — lanyard · bento -->
+  <section class="page-section" id="pAbout">
+    <div class="fade-in-layer"></div>
+    <div class="scan2"></div>
+    <div class="page-title" data-decrypt="09 — ABOUT & RESUME">09 — ABOUT &amp; RESUME</div>
+
+    <div class="ab-lanyard-wrap">
+      <canvas id="lanyardCanvas"></canvas>
+    </div>
+
+    <div class="ab-spotlight" id="abSpotlight"></div>
+    <div class="ab-bento" id="abGrid">
+
+      <div class="ab-card ab-card--name">
+        <div class="ab-card-inner">
+          <div class="ab-tag">Offensive Security Researcher · Bug Hunter · AI Engineer</div>
+          <div class="ab-name-big">P.S.<br>Padmesh.</div>
+          <div class="ab-name-sub">Cybersecurity professional and ethical hacker. Experienced in penetration testing, bug hunting on live sites, and building secure full-stack applications. Active freelancer.</div>
+          <div class="ab-contact-row">
+            <div class="ab-contact-item">padmesh77123 [at] gmail</div>
+            <div class="ab-contact-item">linkedin.com/in/padmesh6119</div>
+            <div class="ab-contact-item">github.com/padmesh6119</div>
+          </div>
+          <div class="ab-freelance">
+            <div class="ab-freelance-title">Freelance — Web Dev &amp; Security Consulting</div>
+            <div class="ab-freelance-sub">Secure web builds · Security audits · Client projects · Ongoing</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ab-card ab-card--resume" id="abResumeCard">
+        <div class="ab-card-inner">
+          <div class="ab-tag">Resume</div>
+          <div class="ab-resume-big">Download<br>my CV.</div>
+          <div class="ab-resume-sub">PDF · 2025</div>
+          <div class="ab-resume-cta">Open ↗</div>
+        </div>
+      </div>
+
+      <div class="ab-card ab-card--edu">
+        <div class="ab-card-inner">
+          <div class="ab-tag">Education</div>
+          <div class="ab-edu-cols">
+            <div class="ab-edu-col ab-edu-col--main">
+              <div class="ab-edu-tag-sm">2023 — 2027 · Current</div>
+              <div class="ab-edu-deg">B.E. Computer Science — Cybersecurity</div>
+              <div class="ab-edu-sch">Sri Krishna College of Technology · Coimbatore</div>
+              <div class="ab-edu-detail">Specialisation in offensive security, network forensics and secure systems design. Active in CTF competitions, bug-bounty programmes and independent vulnerability research alongside coursework.</div>
+            </div>
+            <div class="ab-edu-col">
+              <div class="ab-edu-tag-sm">2010 — 2022</div>
+              <div class="ab-edu-deg">Primary &amp; Higher Secondary</div>
+              <div class="ab-edu-sch">Hilton Matric Higher Secondary School</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ab-card ab-card--langs">
+        <div class="ab-card-inner">
+          <div class="ab-tag" style="margin-bottom:.6rem">Languages</div>
+          <div class="ab-lang-item">
+            <div class="ab-lang-head"><span class="ab-lang-nm">English</span><span class="ab-lang-lv">Proficient</span></div>
+            <div class="ab-lang-tr"><div class="ab-lang-fi" style="width:92%;transition-delay:.2s"></div></div>
+          </div>
+          <div class="ab-lang-item">
+            <div class="ab-lang-head"><span class="ab-lang-nm">Tamil</span><span class="ab-lang-lv">Proficient</span></div>
+            <div class="ab-lang-tr"><div class="ab-lang-fi" style="width:90%;transition-delay:.35s"></div></div>
+          </div>
+          <div class="ab-lang-item">
+            <div class="ab-lang-head"><span class="ab-lang-nm">Hindi</span><span class="ab-lang-lv">Intermediate</span></div>
+            <div class="ab-lang-tr"><div class="ab-lang-fi" style="width:60%;transition-delay:.5s"></div></div>
+          </div>
+          <div class="ab-lang-item">
+            <div class="ab-lang-head"><span class="ab-lang-nm">Japanese</span><span class="ab-lang-lv">Intermediate</span></div>
+            <div class="ab-lang-tr"><div class="ab-lang-fi" style="width:50%;transition-delay:.65s"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ab-card ab-card--avail">
+        <div class="ab-card-inner">
+          <div class="ab-avail-status"><span class="ab-avail-dot"></span><span class="ab-avail-text">Available</span></div>
+          <div class="ab-avail-for">Open to freelance audits, secure builds &amp; bug-bounty collaborations.</div>
+          <div class="ab-avail-cta">padmesh77123@gmail.com</div>
+        </div>
+      </div>
+
+      <div class="ab-card ab-card--skills">
+        <div class="ab-card-inner">
+          <div class="ab-skills-wrap">
+            <span class="ab-pill">SQLi · Blind · OOB</span><span class="ab-pill">SSTI</span><span class="ab-pill">SSRF</span><span class="ab-pill">XXE</span><span class="ab-pill">IDOR chains</span><span class="ab-pill">JWT forgery</span><span class="ab-pill">OAuth abuse</span><span class="ab-pill">HTTP smuggling</span><span class="ab-pill">Race conditions</span><span class="ab-pill">WAF bypass</span><span class="ab-pill">Deserialization</span><span class="ab-pill">SSPP</span><span class="ab-pill">Armitage</span><span class="ab-pill">Havoc C2</span><span class="ab-pill">Sliver</span><span class="ab-pill">CrackMapExec</span><span class="ab-pill">Impacket</span><span class="ab-pill">BloodHound</span><span class="ab-pill">Evil-WinRM</span><span class="ab-pill">Mimikatz</span><span class="ab-pill">Responder</span><span class="ab-pill">Ligolo-ng</span><span class="ab-pill">DCSync</span><span class="ab-pill">Kerberoasting</span><span class="ab-pill">subfinder</span><span class="ab-pill">httpx</span><span class="ab-pill">nuclei</span><span class="ab-pill">ffuf</span><span class="ab-pill">BBOT</span><span class="ab-pill">Shodan · Censys</span><span class="ab-pill">caido</span><span class="ab-pill">recon-ng</span><span class="ab-pill">pwntools</span><span class="ab-pill">pwndbg · GEF</span><span class="ab-pill">ROPgadget</span><span class="ab-pill">angr</span><span class="ab-pill">AFL++</span><span class="ab-pill">Ghidra</span><span class="ab-pill">radare2</span><span class="ab-pill">Frida</span><span class="ab-pill">ret2libc</span><span class="ab-pill">N8N</span><span class="ab-pill">LangGraph</span><span class="ab-pill">CrewAI</span><span class="ab-pill">Ollama</span><span class="ab-pill">llama.cpp · GGUF</span><span class="ab-pill">Unsloth</span><span class="ab-pill">LoRA · QLoRA</span><span class="ab-pill">Mergekit</span><span class="ab-pill">Abliteration</span><span class="ab-pill">RAG pipelines</span><span class="ab-pill">Python</span><span class="ab-pill">C · C++</span><span class="ab-pill">ESP-IDF</span><span class="ab-pill">FreeRTOS</span><span class="ab-pill">JS · TS</span><span class="ab-pill">FastAPI</span><span class="ab-pill">React</span><span class="ab-pill">Docker</span><span class="ab-pill">PostgreSQL</span><span class="ab-pill">Redis</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ab-card ab-card--stats">
+        <div class="ab-card-inner">
+          <div class="ab-tag">Highlights</div>
+          <div class="ab-stats-grid">
+            <div class="ab-stat-item"><div class="ab-stat-val">Top 1%</div><div class="ab-stat-lbl">TryHackMe Global</div></div>
+            <div class="ab-stat-item"><div class="ab-stat-val">7</div><div class="ab-stat-lbl">Bugs Reported</div></div>
+            <div class="ab-stat-item"><div class="ab-stat-val">19</div><div class="ab-stat-lbl">Certifications Earned</div></div>
+            <div class="ab-stat-item"><div class="ab-stat-val">300+</div><div class="ab-stat-lbl">LeetCode Solved</div></div>
+            <div class="ab-stat-item"><div class="ab-stat-val">8</div><div class="ab-stat-lbl">Targets Assessed</div></div>
+            <div class="ab-stat-item"><div class="ab-stat-val">4</div><div class="ab-stat-lbl">Published Write-ups</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- P9 CONTACT -->
+<!-- P9 CONTACT -->
+<section class="page-section" id="p7">
+  <div class="fade-in-layer"></div>
+  <div class="scan2"></div>
+  <div class="page-title" data-decrypt="10 — CONTACT">10 — CONTACT</div>
+  <canvas id="globe-canvas"></canvas>
+  <h2 class="face-title inactive" id="faceTitle"></h2>
+  <p class="face-description inactive" id="faceDesc"></p>
+  <a class="action-button inactive" id="actionBtn" href="#" target="_blank">
+    <span class="action-button-icon">&#x2197;</span>
+  </a>
+
+  <div class="contact-mobile">
+    <div class="cm-head">Let's build something secure.</div>
+    <a class="cm-link" href="mailto:padmesh77123@gmail.com">
+      <span class="cm-k">Email</span><span class="cm-v">padmesh77123@gmail.com</span><span class="cm-arr">↗</span>
+    </a>
+    <a class="cm-link" href="https://linkedin.com/in/padmesh1101" target="_blank" rel="noopener">
+      <span class="cm-k">LinkedIn</span><span class="cm-v">in/padmesh1101</span><span class="cm-arr">↗</span>
+    </a>
+    <a class="cm-link" href="https://github.com/padmesh6119" target="_blank" rel="noopener">
+      <span class="cm-k">GitHub</span><span class="cm-v">padmesh6119</span><span class="cm-arr">↗</span>
+    </a>
+  </div>
+</section>
+
+</div></div>
+
+<script src="script.js"></script>
+</body>
+</html>
