@@ -547,6 +547,27 @@ document.getElementById('detailModal').addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetailModal();});
 
+/* ══ EXPERIENCE XCARDS ══ */
+(function(){
+  const XP=[
+    {tag:'Systems',title:'OS Management',sub:'Daily driver across distributions',body:'Arch, Debian, Kali, Ubuntu — not just installed, but maintained over months and years. Configured window managers, package managers, and system services from scratch. Diagnosed boot failures, kernel panics, and hardware conflicts at the OS level. Comfortable in both systemd and runit-based environments. Understand the difference between a working install and a hardened one.',tags:['Arch','Debian','Kali','Ubuntu','systemd']},
+    {tag:'Security',title:'Offensive Security & CTF',sub:'Hands-on exploitation, not slides',body:'Competed in CTF challenges spanning web exploitation, binary exploitation, privilege escalation, cryptography, and forensics. Applied real techniques — SQLi, SSRF, XSS, LFI, IDOR, buffer overflows — in sandboxed environments before using them in live bug bounty work. Top 1% on TryHackMe. Built custom tooling when off-the-shelf failed.',tags:['Web Exploitation','Priv-Esc','Crypto','Forensics','CTF']},
+    {tag:'Tools',title:'Security Tooling',sub:'Real-world use, not demos',body:'Burp Suite (manual + Intruder + Repeater + Collaborator), Nmap, Metasploit, sqlmap, ffuf, Gobuster, Nikto, Wireshark, Shodan, OWASP ZAP — used against real targets with written scope, not labs. Know when tools lie, when they miss, and when to write a curl command instead. Built custom recon scripts to automate surface mapping.',tags:['Burp Suite','Nmap','sqlmap','ffuf','Metasploit']},
+    {tag:'Hardware',title:'Diagnostics & Repair',sub:'Dedcell — component-level triage',body:'Ran Dedcell, a local tech repair service handling laptop and phone hardware failures. Diagnosed faulty RAM, corrupted eMMC, failed display controllers, and charging circuit issues — not by swapping components blindly, but by reading symptoms and narrowing faults. Also handled OS-level hardware issues: driver conflicts, corrupted bootloaders, failing storage mid-session.',tags:['Hardware','Repair','Diagnostics','Embedded']},
+    {tag:'AI',title:'Applied AI & Models',sub:'Custom deployment, not just API calls',body:'Deployed and fine-tuned local LLMs (Mistral, LLaMA variants) on constrained hardware. Quantized models to fit GPU VRAM budgets. Built ROOK — a voice assistant that routes between local and cloud inference based on query complexity. Understands token limits, context windows, temperature behavior, and hallucination patterns from direct use, not documentation.',tags:['LLM','Quantization','Local AI','ROOK','Python']},
+    {tag:'Web',title:'Web Design & Dev',sub:'Built from layout to deployment',body:'Designed and developed web projects with attention to performance, security, and interaction design. Familiar with vanilla JS, React basics, Tailwind, and writing CSS that does not fight the browser. Security-first approach: no third-party scripts without audit, headers set, no unvalidated input reaching the DOM. This portfolio is one artifact of that.',tags:['JS','CSS','Tailwind','Performance','Security']},
+    {tag:'UX',title:'System Ricing & Workflow',sub:'Optimised for speed and clarity',body:'Configured tiling window managers (i3, Hyprland), custom terminal setups (Alacritty, tmux), and keybinding systems designed to eliminate mouse dependency. Every setup is documented and version-controlled — reproducible from scratch in under an hour. Automation via shell scripts and cron. The goal: zero friction between intent and action.',tags:['i3','Hyprland','tmux','Shell','Automation']},
+    {tag:'Research',title:'Vulnerability Research',sub:'Bug hunting on live targets',body:'Conducted security assessments on live web applications under responsible disclosure. Found and documented SQL injection, XSS, IDOR, CSRF, authentication bypasses, exposed API keys, and misconfigured cloud storage across multiple targets including Zomato, TNSTC, and inDrive. Wrote structured CVSS-scored reports. One engagement caused a platform-wide outage through a single unauthenticated SQLi — documented and disclosed.',tags:['Bug Bounty','SQLi','IDOR','CSRF','Disclosure']},
+  ];
+  document.querySelectorAll('.xcard').forEach((card,i)=>{
+    card.style.cursor='pointer';
+    card.addEventListener('click',()=>{
+      const d=XP[i];
+      if(!d)return;
+      openDetailModal(d.tag,d.title,d.sub,d.body,d.tags,null);
+    });
+  });
+})();
 
 /* ══ FINDER PROJECTS ══ */
 (function(){
@@ -1489,3 +1510,28 @@ function decryptPageTitle(el){
   sync();
 })();
 
+
+/* ══ PAGE GUIDE BUTTONS ══ */
+(function(){
+  document.querySelectorAll('.pg-btn').forEach(btn=>{
+    const panel=btn.nextElementSibling;
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const open=panel.classList.contains('open');
+      // close all
+      document.querySelectorAll('.pg-panel.open').forEach(p=>p.classList.remove('open'));
+      document.querySelectorAll('.pg-btn.active').forEach(b=>b.classList.remove('active'));
+      if(!open){panel.classList.add('open');btn.classList.add('active');}
+    });
+  });
+  document.addEventListener('click',()=>{
+    document.querySelectorAll('.pg-panel.open').forEach(p=>p.classList.remove('open'));
+    document.querySelectorAll('.pg-btn.active').forEach(b=>b.classList.remove('active'));
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){
+      document.querySelectorAll('.pg-panel.open').forEach(p=>p.classList.remove('open'));
+      document.querySelectorAll('.pg-btn.active').forEach(b=>b.classList.remove('active'));
+    }
+  });
+})();
