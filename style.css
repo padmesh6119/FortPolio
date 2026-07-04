@@ -308,6 +308,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:#fff;cursor:none;}
 .mouse-wheel{width:1.5px;height:5px;background:rgba(255,255,255,0.3);border-radius:1px;animation:mw 1.8s ease infinite;}
 @keyframes mw{0%{transform:translateY(0);opacity:1}60%{transform:translateY(7px);opacity:0}61%{transform:translateY(0);opacity:0}100%{transform:translateY(0);opacity:1}}
 
+/* ══ PAGE GUIDE BUTTON ══ */
+.pg-btn{
+  position:absolute;bottom:1.6rem;left:1.8rem;
+  width:26px;height:26px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.45);font-family:var(--mono);font-size:0.62rem;
+  cursor:pointer;z-index:30;display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s,color .2s;
+  line-height:1;
+}
+.pg-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff;}
+.pg-btn.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.35);color:#fff;}
+.pg-panel{
+  position:absolute;bottom:4.2rem;left:1.8rem;
+  background:rgba(10,10,10,.88);border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-radius:8px;padding:1rem 1.2rem 0.9rem;
+  width:clamp(200px,22vw,280px);z-index:29;
+  opacity:0;pointer-events:none;
+  transform:translateY(6px);
+  transition:opacity .2s,transform .2s;
+}
+.pg-panel.open{opacity:1;pointer-events:auto;transform:translateY(0);}
+.pg-title{font-family:var(--mono);font-size:0.38rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.55rem;}
+.pg-panel ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.45rem;}
+.pg-panel li{font-size:0.72rem;color:rgba(255,255,255,.62);line-height:1.5;padding-left:.9rem;position:relative;}
+.pg-panel li::before{content:'→';position:absolute;left:0;color:rgba(255,255,255,.25);font-size:0.6rem;top:.05em;}
+
 /* ══ PAGE 2 — ABOUT ══ */
 #p2{background:#000;display:flex;align-items:stretch;}
 .about-left{flex:1;display:flex;flex-direction:column;justify-content:center;padding:4rem 3rem 4rem 3.5rem;position:relative;z-index:2;}
@@ -2958,6 +2986,9 @@ spline-viewer::part(logo){ display:none!important; }
     top:1.5rem !important;
     color:rgba(255,255,255,.5) !important;
   }
+
+  .pg-btn{ bottom:1rem; left:1rem; width:24px; height:24px; font-size:0.58rem; }
+  .pg-panel{ bottom:3.6rem; left:1rem; width:calc(100vw - 2rem); max-width:320px; }
 
   /* ── P1 · HERO ── */
   .hero-body{ padding:0 1.6rem !important; }
