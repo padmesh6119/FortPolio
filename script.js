@@ -1309,8 +1309,8 @@ function decryptPageTitle(el){
   resumeCard.style.cursor='pointer';
   resumeCard.addEventListener('click',()=>{
     const link=document.createElement('a');
-    link.href='assets/Resume.pdf';
-    link.download='Resume.pdf';
+    link.href='assets/Padmesh_CyberSecurityResearcher.pdf';
+    link.download='Padmesh_CyberSecurityResearcher.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
