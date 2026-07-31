@@ -463,7 +463,7 @@ body::after{
 
 <header class="topbar">
   <a href="index.html"><span class="arrow">←</span> Portfolio</a>
-  <button class="toc-btn" id="tocOpen">Index · 23 ⌗</button>
+  <button class="toc-btn" id="tocOpen">Index · 17 ⌗</button>
 </header>
 
 <div class="wrap">
@@ -502,9 +502,9 @@ body::after{
   <section class="preface">
     <div class="sec-label"><span>Preface</span><span class="dash"></span></div>
     <h2>Seventeen vulnerabilities. <em>Five production platforms.</em></h2>
-    <p>This is a reader, not a report. The findings ahead were collected between January and June of 2026 across ten production platforms — a state transport corporation, two large e-commerce storefronts, a multi-tenant college ERP, a managed cloud provider, a ride-hailing platform, and others.</p>
-    <p>Some are catastrophic. Most are not. A few are the kind of bug you read three times before you believe it: a CAPTCHA endpoint that returned <em>the answer</em>, a feature-flag service that handed over <em>four hundred toggles</em>, a session ID logged to <em>three CDN providers</em> on every page view.</p>
-    <p>Names are real. Payloads are sanitized. Severities are vendor-aligned. Where a finding caused real platform-wide impact during testing, it is noted. All work was performed under <strong>authorization, program scope, or responsible disclosure.</strong></p>
+    <p>This is a reader, not a report. The findings here were collected across five production platforms — a state transport corporation serving fifty thousand passengers a day, a government college ERP, a managed cloud provider, a food delivery giant, and a ride-hailing company operating at scale.</p>
+    <p>Some are catastrophic. Some are chains — individually low severity, collectively account takeover. A few are the kind of thing you read twice before you believe it shipped: a CAPTCHA endpoint that returned the answer, a gift card hash key that was literally <code>1234123412341234</code>, a state-wide platform that went offline from a single unauthenticated SQL probe.</p>
+    <p>Names are real. Payloads are sanitized. Severities are my own assessment, noted against CWE and CVSS where meaningful. Where testing caused measurable platform impact, it is stated. All work was performed under authorization, disclosed program scope, or responsible disclosure.</p>
     <div class="preface-stats">
       <div><div class="ps-v">17</div><div class="ps-l">Findings</div></div>
       <div><div class="ps-v">5</div><div class="ps-l">Targets</div></div>
@@ -547,7 +547,7 @@ body::after{
   <button class="toc-close" id="tocClose">Close ✕</button>
   <div class="toc-inner">
     <h2 class="toc-h"><em>Index</em></h2>
-    <div class="toc-sub">Twenty-three chapters · Tap to jump</div>
+    <div class="toc-sub">Seventeen chapters · Tap to jump</div>
     <ol class="toc-list" id="tocList"></ol>
   </div>
 </div>
@@ -559,103 +559,103 @@ const stories=[
   {n:1,id:"TN-15",target:"TNSTC",host:"tnstc.in / OTRSOnline",sev:"crit",
    writeup:"https://medium.com/@padmesh77123/time-based-blind-sql-injection-in-a-government-bus-booking-platform-unauthenticated-access-to-4347c51b467d",
    title:"The bus that could <em>stop a state</em>.",
-   body:`<p>Five million passenger records sat one BENCHMARK away from anyone who knew where to look. The MySQL account behind the query — <code>ut06@%</code> — held FILE and SUPER privileges, the kind reserved for the database administrator.</p><p>A single time-blind probe confirmed a live passenger PNR, <em>T80558755</em>, present in the haystack. The platform is the booking surface for a state transport corporation. Fifty thousand passengers a day. One unauthenticated request.</p>`,
+   body:`<p>One unauthenticated request. <code>BENCHMARK(5000000,MD5('a'))</code> into <code>txtObRefNo</code>. The server hung for 711 seconds. The entire platform — fifty thousand daily passengers, state-wide bus booking — went offline. When it came back, the database was still wide open.</p><p>Time-blind exfiltration confirmed the database user: <code>ut06@%</code>, FILE and SUPER privileges, sitting behind a WHERE clause that had never seen a parameterized query. PNRMASTER: five million rows. Passenger PNR <em>T80558755</em> confirmed present in two probes. USERMASTER, LOGIN, DEPOTDETAIL — everything the state transport runs on, reachable by anyone who thought to add a quote mark to a booking reference field.</p>`,
    evL:"Probe",evC:"BENCHMARK(5000000, MD5('a')) — txtObRefNo",
    meta:"CWE-89 / 200 · MySQL 5.7.x · tnstcoprs"},
 
   {n:2,id:"SK-01",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"crit",
-   title:"No login. No token. <em>Just your phone number.</em>",
-   body:`<p><code>POST /api/userManagement/passwordResetSms/{phone}</code> dispatched an OTP to any registered number with no authentication header, no session, and no rate limit. The endpoint answered 200 for the platform's super admin the same as any student's.</p><p>The password-change endpoint accepted the OTP, skipped knowledge of the current password entirely, and returned a policy error on reuse — confirming the OTP was validated before rejection. Full chain: enumerate admin phone via IDOR, trigger OTP with no auth, receive on the physical device, reset. Admin access in four requests.</p>`,
+   title:"No login. No token. <em>Just a phone number.</em>",
+   body:`<p><code>POST /api/userManagement/passwordResetSms/{phone}</code>. No authentication header. No session. No rate limit. Any registered phone number — student, staff, super admin — received a fresh OTP. The endpoint answered 200 for the platform administrator the same as any student.</p><p>The password-change endpoint accepted that OTP without requiring the current password. It rejected the same password on reuse — meaning it validated the OTP against the account before throwing the policy error. Proof of reach. Chain: enumerate admin phone via IDOR search, trigger OTP unauthenticated, swap password. Platform admin in four requests.</p>`,
    evL:"Trigger (no auth)",evC:"POST /api/userManagement/passwordResetSms/91-9087671162 → 200",
    meta:"CWE-306 · CVSS 9.6 · confirmed 2026-06-13"},
 
   {n:3,id:"SK-02",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"crit",
    title:"Student searches for admin. <em>Admin found. Chain complete.</em>",
-   body:`<p>A student-role session could call the user-search endpoint with any key term and receive accounts regardless of role. Searching <code>admin</code> returned the platform super-admin, the SKCET admin office, and nine department heads — ukids, emails, and phone numbers included.</p><p>Calling <code>/rest/users/userInfo/{ukid}</code> with a student JWT on any of those returned the phone number needed for the OTP reset chain. The server never checked whether the caller outranked the target.</p>`,
+   body:`<p>A student-role JWT. The user-search endpoint. The keyword <code>admin</code>. The response came back with the platform super-admin, the SKCET admin office, and nine department heads — ukids, emails, and phone numbers, all of it, no role check on the caller or the results.</p><p><code>/rest/users/userInfo/{ukid}</code> with the same student token returned full profile data for any ukid, including the phone number the OTP reset chain needed. The server had one job at the authorization layer. It skipped it. Ukid 1408656. Phone 91-8867486444. The piece that unlocked everything else.</p>`,
    evL:"Search result (student JWT)",evC:"GET /search/v2?key=admin → collpoll-admin ukid 1408656, phone 91-8867486444",
    meta:"CWE-639 · CVSS 9.3 · confirmed"},
 
   {n:4,id:"SK-03",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"crit",
    title:"Reset link, <em>delivered to the attacker's domain.</em>",
-   body:`<p>The password-reset email flow consumed the <code>X-Forwarded-Host</code> header without validation and used it to construct the reset link's hostname. Injecting an attacker-controlled domain caused every outbound reset email to carry a link pointing off-site.</p><p>Any user who clicked would send their reset token to the attacker before the legitimate server ever saw it — a silent account takeover requiring no other foothold, just the target's registered email address.</p>`,
+   body:`<p>The password-reset mailer built the reset link hostname from the <code>X-Forwarded-Host</code> header. No validation. Inject <code>attacker.ngrok.io</code>, trigger a reset for any account, and the outbound email carried a link pointing off-site — not to the platform, to you.</p><p>The victim clicks. Their reset token arrives at the attacker's server before the legitimate application ever sees it. Silent account takeover. No foothold, no session, no prior access — just the target's registered email and one spoofed header.</p>`,
    evL:"Injected header",evC:"X-Forwarded-Host: attacker.ngrok.io → reset link domain swapped",
    meta:"CWE-601 · CVSS 9.1 · email confirmation pending"},
 
   {n:5,id:"SK-04",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
-   title:"Change anyone's password. <em>Theirs.</em>",
-   body:`<p>The password-change endpoint accepted a <code>ukid</code> path parameter and honored it regardless of whether it matched the authenticated session. Submitting a different student's ukid produced "Incorrect existing password" — not a 403. The server reached the password-validation layer for a foreign account, confirming the authorization check was missing.</p><p>With an admin ukid obtained from the IDOR search endpoint, the same request targeted platform administrators.</p>`,
+   title:"Change anyone's password. <em>Theirs. Not yours.</em>",
+   body:`<p>The password-change endpoint accepted a <code>ukid</code> in the path and acted on it. It did not check whether that ukid matched the authenticated session. Submit another student's ukid: the server reached the password-validation layer for a foreign account, then returned a policy error on reuse. Not a 403. The authorization gate was absent — only the business-logic layer ran.</p><p>Swap in an admin ukid sourced from the IDOR search endpoint: same behavior. Wrong-password attempts logged against the administrator's account from a student session. One endpoint. Any account on the platform.</p>`,
    evL:"Request (student JWT, foreign ukid)",evC:"PUT /api/userManagement/change/password/{admin_ukid} → 400 (policy, not 403)",
    meta:"CWE-639 · CVSS 8.1 · confirmed 2026-06-13"},
 
   {n:6,id:"SK-05",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
-   title:"Stored XSS. <em>Student-accessible.</em>",
-   body:`<p>The user bio field on the profile page stored arbitrary input and reflected it into the DOM on any profile view without sanitisation. A payload in the bio field persisted across sessions and executed for anyone who loaded the profile — students, staff, or administrators.</p><p>No Content Security Policy was present to contain execution. The attack surface included the admin review panel, where staff routinely viewed student profiles.</p>`,
+   title:"Stored XSS. <em>Fires on every admin review.</em>",
+   body:`<p>The profile bio field stored whatever it received and rendered it directly into the DOM on every profile view — no encoding, no sanitization, no CSP. A payload in the bio persisted across sessions and executed for every visitor who loaded the profile: other students, staff, administrators.</p><p>The admin review panel opened student profiles routinely. Store once, execute in every privileged context that looks at the account. The session cookie traveled with the alert.</p>`,
    evL:"Stored payload",evC:"bio: <img src=x onerror=alert(document.cookie)> → executes on profile load",
    meta:"CWE-79 · CVSS 8.0 · stored confirmed"},
 
   {n:7,id:"CW-01",target:"Cloudways",host:"api.cloudways.com",sev:"high",
-   title:"CORS: credentials=true. <em>Origin: attacker.cloudways.com</em>",
-   body:`<p>Every endpoint under <code>api.cloudways.com/api/v2/</code> reflected any <code>*.cloudways.com</code> subdomain back in <code>Access-Control-Allow-Origin</code> with <code>Access-Control-Allow-Credentials: true</code>. The regex matched the suffix, not the exact allowlist.</p><p>Chained with the subdomain takeover on <code>bootcamp.cloudways.com</code> — a dangling CNAME to an abandoned Zuddl account — an attacker who claimed that subdomain could make fully credentialed cross-origin requests to the entire Cloudways API on behalf of any authenticated user visiting a crafted page.</p>`,
+   title:"CORS wildcard suffix. <em>Credentials: true. Any *.cloudways.com wins.</em>",
+   body:`<p>Every endpoint under <code>api.cloudways.com/api/v2/</code> reflected any <code>*.cloudways.com</code> origin back in <code>Access-Control-Allow-Origin</code>, paired with <code>Access-Control-Allow-Credentials: true</code>. The implementation matched the suffix, not an explicit allowlist. Any subdomain — real or squatted — received fully credentialed cross-origin access to the entire API.</p><p>Chained with the dangling CNAME on <code>bootcamp.cloudways.com</code> pointing at an abandoned Zuddl account: claim the Zuddl path, control the subdomain, issue authenticated API requests on behalf of any Cloudways user who visits one crafted page.</p>`,
    evL:"CORS header",evC:"Origin: https://bootcamp.cloudways.com → ACAO: https://bootcamp.cloudways.com + ACAC: true",
    meta:"CWE-942 · CVSS 8.3 · chain: CORS + subdomain takeover"},
 
   {n:8,id:"ZM-01",target:"Zomato",host:"enterprise.zomato.com",sev:"high",
-   title:"The four-digit <em>gift card key</em>.",
-   body:`<p>Three secrets traveled hand-in-hand inside Zomato's enterprise JavaScript bundle. <code>REACT_APP_ZOMATO_API_KEY</code>. <code>AUTH_CLIENT_ID</code>. And, sitting beside them — uncommented, unobfuscated, in production — the punchline.</p><p>Any visitor to the enterprise portal could read the credentials without authentication. The gift card key in particular represented direct financial impact — any party holding it could forge or validate gift card operations against the production system.</p>`,
+   title:"The gift card key was <em>1234123412341234</em>.",
+   body:`<p>Three secrets inside Zomato's enterprise JavaScript bundle, readable by any visitor without authentication. <code>REACT_APP_ZOMATO_API_KEY</code>. <code>AUTH_CLIENT_ID</code>. And — uncommented, unobfuscated, production build — <code>GIFT_CARD_HASH_KEY = 1234123412341234</code>.</p><p>The API key and OAuth client ID enabled platform abuse and flow manipulation. The gift card key was the part with direct financial exposure: any holder could forge or validate gift card operations against the live system. All three shipped together in the same bundle, on a page that required no login to load.</p>`,
    evL:"Hardcoded value",evC:"GIFT_CARD_HASH_KEY = 1234123412341234",
    meta:"CWE-798 · CVSS 8.2 · main.js bundle"},
 
   {n:9,id:"ID-01",target:"InDrive",host:"coaching.supernovas.indrive.com",sev:"high",
-   title:"Webshell uploaded. <em>Stored. Accessible. Waiting.</em>",
-   body:`<p>The TutorLMS plugin on InDrive's Supernovas education platform validated uploaded files by MIME type only — not by content. PHP webshells, GIF-PHP polyglots, and JPEG-PHP polyglots all passed the check and were stored at publicly accessible paths returned by the WordPress media API.</p><p>The REST endpoint <code>/wp-json/wp/v2/media</code> returned all uploaded files without authentication. Multiple shells — including <code>shell.php</code>, <code>shell.gif</code>, and SVG-XSS payloads — were confirmed stored on the server and reachable by anyone with the URL.</p>`,
+   title:"Webshell uploaded. <em>Stored. Public path. Waiting.</em>",
+   body:`<p>TutorLMS on InDrive's Supernovas platform validated uploads by MIME type. Not by content. PHP webshells passed. GIF-PHP polyglots passed. JPEG-PHP polyglots passed. Every one stored at a publicly accessible path returned by the WordPress media API — <code>/wp-json/wp/v2/media</code>, unauthenticated, returning all uploads.</p><p><code>shell.php</code>. <code>shell.gif</code>. SVG-XSS payloads. Confirmed present on the server. Reachable from any browser with the URL. Whether they executed depended on server configuration. Whether they were stored and publicly accessible did not.</p>`,
    evL:"Stored file",evC:"POST /wp-json/wp/v2/media → shell.php at /wp-content/uploads/",
    meta:"CWE-434 · CVSS 7.5 · PHP exec pending server config"},
 
   {n:10,id:"SK-06",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
-   title:"CORS: any origin. <em>Credentials included.</em>",
-   body:`<p>The API reflected arbitrary <code>Origin</code> headers back in <code>Access-Control-Allow-Origin</code> and paired them with <code>Access-Control-Allow-Credentials: true</code>. No allowlist. No validation.</p><p>Any page on any domain could issue cross-origin authenticated requests on behalf of a logged-in student or staff member. Auth tokens in cookies were included automatically, making the full API surface — including admin search and userInfo endpoints — reachable cross-origin from any attacker page.</p>`,
+   title:"CORS: any origin. <em>Credentials attached. Every time.</em>",
+   body:`<p>Send any <code>Origin</code>. Receive it back in <code>Access-Control-Allow-Origin</code>. Paired with <code>Access-Control-Allow-Credentials: true</code>. No allowlist. No domain check. This was not one misconfigured endpoint — it was the API's response to every cross-origin request across the board.</p><p>Any attacker-controlled page could issue authenticated requests on behalf of a logged-in user. The victim's session cookies attached automatically. The full API surface — admin search, userInfo, password endpoints — reachable cross-origin from anywhere.</p>`,
    evL:"CORS response",evC:"Origin: https://evil.example → ACAO: https://evil.example + ACAC: true",
    meta:"CWE-942 · CVSS 8.1 · confirmed"},
 
   {n:11,id:"SK-07",target:"SKCET DigiICampus",host:"skcet.digiicampus.com",sev:"high",
-   title:"Unauthenticated reset trigger. <em>No auth. No rate limit.</em>",
-   body:`<p>The email-based password reset trigger required no authentication and enforced no rate limit. Back-to-back requests to <code>POST /api/userManagement/forgotPassword/{email}</code> returned 200 indefinitely, dispatching a fresh OTP each time and invalidating the previous one.</p><p>Unauthenticated trigger with no lockout and no CAPTCHA allowed continuous OTP cycling against any account. The admin email was publicly discoverable via the IDOR chain, making this a direct path to admin account compromise.</p>`,
+   title:"Unauthenticated reset. <em>No rate limit. Runs indefinitely.</em>",
+   body:`<p><code>POST /api/userManagement/forgotPassword/{email}</code>. No authentication. No CAPTCHA. No lockout. Five back-to-back requests: five 200s, five fresh OTPs, each one invalidating the last. The endpoint cycled forever — dispatching on demand, burning old codes, never locking out.</p><p>The admin email was publicly reachable via the IDOR search chain. Drive the reset endpoint until the OTP lands on the target's physical device, then move. No session, no prior access, no interaction from the victim required.</p>`,
    evL:"Rate-limit test",evC:"POST /forgotPassword/office@skcet.ac.in × 5 → 200 × 5, new OTP each",
    meta:"CWE-307 · CVSS 7.5 · confirmed"},
 
   {n:12,id:"ZM-02",target:"Zomato",host:"zwstatic.zomato.com / S3",sev:"med",
-   title:"Five years of bundles. <em>Publicly indexed.</em>",
-   body:`<p>The S3 bucket backing Zomato's CDN at <code>zwstatic.zomato.com</code> had public listing enabled. An unauthenticated GET to the bucket root returned an XML manifest of every object stored — JavaScript bundles, source assets, and build artifacts dating back to 2021.</p><p>Historical bundles are a reconnaissance goldmine: older code often contains secrets that have since been rotated from the live bundle but remain readable in the archive. The listing also maps the full asset naming convention and deployment cadence.</p>`,
+   title:"Five years of build artifacts. <em>All of them listed.</em>",
+   body:`<p>The S3 bucket behind Zomato's CDN had public listing enabled. A GET to the bucket root returned an XML manifest of everything stored — JavaScript bundles, source assets, build artifacts, back to 2021. Five years of deployment history in one unauthenticated request.</p><p>Historical bundles are credential archives. Secrets rotate from the live build. They do not rotate from artifacts already pushed. The listing also exposed the full asset naming convention and deployment cadence — a map of every surface worth reviewing in the archive.</p>`,
    evL:"Listing URL",evC:"GET https://zweb.zomato.com/ → XML · 5 years of JS bundles enumerated",
    meta:"CWE-732 · CVSS 5.3 · public bucket listing"},
 
   {n:13,id:"ID-02",target:"InDrive",host:"indrive.mediator.cloud",sev:"med",
-   title:"og:url, <em>unescaped. No CSP.</em>",
-   body:`<p>The awards platform at <code>indrive.mediator.cloud</code> reflected the raw request URL into the <code>og:url</code> meta tag content attribute without HTML-encoding the double-quote character. Breaking out of the attribute context with <code>"&gt;</code> injected arbitrary HTML into the page head.</p><p>With no Content-Security-Policy header present, inline scripts executed without restriction. The attack required a crafted URL delivered to a victim — one click, no stored persistence needed.</p>`,
+   title:"og:url unescaped. <em>Script in the page head. No CSP.</em>",
+   body:`<p>The awards platform reflected the raw request URL into the <code>og:url</code> meta tag content attribute without encoding the double-quote character. Break out of the attribute with <code>"&gt;</code> and arbitrary HTML lands in the page head. No Content-Security-Policy. Inline scripts execute without restriction.</p><p>One crafted URL. One click from the victim. No stored persistence, no account, no foothold — just a link that runs JavaScript in the browser of whoever opens it.</p>`,
    evL:"Payload",evC:`/awards/">&lt;script&gt;alert(1)&lt;/script&gt; → executes in head`,
    meta:"CWE-79 · CVSS 6.1 · reflected XSS · no CSP"},
 
   {n:14,id:"ID-03",target:"InDrive",host:"indrive.mediator.cloud",sev:"med",
-   title:"CSRF. <em>SameSite=None. No token.</em>",
-   body:`<p>The awards platform set its session cookie with <code>SameSite=None; Secure</code> and no <code>HttpOnly</code> flag. No CSRF token was present on any state-changing POST endpoint. Cross-site requests from any attacker-controlled page carried the victim's session automatically.</p><p>An attacker could silently award points, submit nominations, or modify recognition records on behalf of any authenticated InDrive employee who visited a crafted page — no interaction beyond the page load required.</p>`,
+   title:"CSRF. <em>SameSite=None. No token. Awards forgeable.</em>",
+   body:`<p>Session cookie: <code>SameSite=None; Secure</code>. No <code>HttpOnly</code>. No CSRF token on any state-changing endpoint. A cross-site POST from any attacker page carried the victim's cookie automatically. The server accepted it.</p><p>An InDrive employee lands on a crafted page. Before they close the tab, their session has silently awarded points, submitted nominations, or modified recognition records on their behalf. No user interaction required beyond the page load.</p>`,
    evL:"Cookie flags",evC:"mediator_session: SameSite=None; Secure — no CSRF token on POST endpoints",
    meta:"CWE-352 · CVSS 6.5"},
 
   {n:15,id:"ID-04",target:"InDrive",host:"teammate.indriver.io",sev:"med",
-   title:"Internal HR platform. <em>Public. No auth challenge.</em>",
-   body:`<p><code>teammate.indriver.io</code> served a full React SPA for InDrive's internal HR and employee-management system to unauthenticated visitors. The HTML, JS bundles, and all assets loaded without any login wall or redirect.</p><p>The GraphQL backend at <code>/query</code> returned 403 without a valid JWT — but the frontend exposed the full schema, all operation names, and internal tooling identifiers simply by loading the page. A complete map of the internal HR attack surface, delivered unauthenticated on request.</p>`,
+   title:"Internal HR platform. <em>Public internet. No challenge.</em>",
+   body:`<p><code>teammate.indriver.io</code> is InDrive's internal HR and employee management system. It served the full React SPA to unauthenticated visitors. No login wall, no redirect, no challenge. Plain GET from any browser, anywhere — 200, full application.</p><p>The GraphQL backend at <code>/query</code> required a valid JWT for data — but the frontend bundled the complete schema, all operation names, and internal tooling identifiers. A map of the entire internal HR attack surface, handed over before any authentication was attempted.</p>`,
    evL:"Unauthenticated load",evC:"GET teammate.indriver.io → 200 · full HR SPA · GraphQL schema in JS",
    meta:"CWE-306 · CVSS 5.3 · surface exposure"},
 
   {n:16,id:"CW-02",target:"Cloudways",host:"bootcamp.cloudways.com",sev:"low",
-   title:"Dangling CNAME. <em>Subdomain up for grabs.</em>",
-   body:`<p><code>bootcamp.cloudways.com</code> held a CNAME to a Zuddl whitelabel subdomain returning 404. The Cloudways account on Zuddl appeared expired or deleted.</p><p>An attacker who registered the same whitelabel path on Zuddl would gain control of a <code>*.cloudways.com</code> subdomain. Chained with the CORS wildcard-suffix match on <code>api.cloudways.com</code>, this converts a dangling DNS record into a fully credentialed API takeover vector.</p>`,
+   title:"Dangling CNAME. <em>One Zuddl registration away.</em>",
+   body:`<p><code>bootcamp.cloudways.com</code> CNAMEs to a Zuddl whitelabel subdomain returning 404. The Cloudways account on Zuddl is gone. The DNS record is not.</p><p>Register the same whitelabel path on Zuddl. Control the subdomain. Serve whatever you want from a <code>*.cloudways.com</code> origin. Standalone: low. Against the wildcard-suffix CORS match on <code>api.cloudways.com</code>: that dangling DNS entry becomes a fully credentialed API takeover vector for any authenticated Cloudways user who visits one page.</p>`,
    evL:"DNS",evC:"bootcamp.cloudways.com CNAME → zuddl-wl.*.app → 404 Not Found",
    meta:"CWE-350 · standalone low · critical when chained with CW-01"},
 
   {n:17,id:"ZM-03",target:"Zomato",host:"enterprise.zomato.com",sev:"low",
-   title:"Source map. <em>Full enterprise tree, public.</em>",
-   body:`<p>The production JavaScript source map for Zomato's enterprise portal was publicly accessible at the standard <code>.map</code> path. Source maps reverse the minification: every original filename, directory structure, and line of pre-build source code is recoverable.</p><p>The file exposed the full internal project tree, component naming conventions, and business logic pathways of a platform handling enterprise B2B orders — without authentication, from a single HTTP GET.</p>`,
+   title:"Source map public. <em>1,021 files reconstructed from one GET.</em>",
+   body:`<p>The production JavaScript source map for Zomato's enterprise portal sat at the standard <code>.map</code> path, publicly accessible. One HTTP GET. 6.1 MB. 1,021 files — 299 application files — every original filename, directory path, component, and line of pre-build source recoverable from the minified output.</p><p>Source maps belong to debuggers, not production servers. This one exposed payment logic, authentication flows, and internal project architecture for a platform handling enterprise B2B orders. It also sharpened every other Zomato finding by showing exactly where to look in the bundle.</p>`,
    evL:"Source map URL",evC:"GET /static/js/main.ba8c4bf7.js.map → 200 · full source tree",
    meta:"CWE-540 · CVSS 4.3"},
 ];
