@@ -1758,7 +1758,7 @@ spline-viewer::part(logo){ display:none!important; }
 
 .finder-host {
   width: 100%;
-  max-width: 960px;
+  max-width: 1200px;
   padding: 0 1.5rem;
   position: relative;
   z-index: 5;
@@ -1848,7 +1848,7 @@ spline-viewer::part(logo){ display:none!important; }
 .tb-view { display: flex; gap: 1px; margin-left: 2px; }
 
 /* ── Body layout ── */
-.finder-body { display: flex; height: 420px; }
+.finder-body { display: flex; height: 580px; }
 
 /* ── Sidebar ── */
 .finder-sidebar {

@@ -4,14 +4,14 @@ Aggregated from local engagement notes across 8 assessed targets. Engagements da
 
 | Target | Findings | Highest Severity |
 |---|---|---|
-| Zomato (eternal) | 5 | High |
-| inDrive | 6 | Medium |
-| Desk365 | 6 | High |
-| Ghar Soaps | 11 | High |
-| mCaffeine | 12 | High |
-| CAMU (mycamu) | 6 | Medium |
-| TCE (tce.edu) | 5 | High |
-| TNSTC OTRSOnline | 15 | Critical |
+| Zomato (eternal) | 4 | High |
+| inDrive | 5 | Medium |
+| Desk365 | 5 | High |
+| Ghar Soaps | 9 | High |
+| mCaffeine | 6 | High |
+| CAMU (mycamu) | 2 | Medium |
+| TCE (tce.edu) | 4 | High |
+| TNSTC OTRSOnline | 14 | Critical |
 
 ---
 
@@ -29,8 +29,6 @@ Two active Sentry DSNs hardcoded in `zwstatic.zomato.com/main-*.js` pointing at 
 ### Z-04 — S3 Bucket Public Listing (Medium, CWE-732, CVSS 5.3)
 `zweb.zomato.com` S3 bucket (via CloudFront `zwstatic`) allows unauthenticated `list-type=2` enumeration of 1000+ objects incl. historical bundles back to 2021 — enables historical credential hunting.
 
-### Z-05 — Internal Hostname / API Endpoint Enumeration (Low/Info, CWE-200, CVSS 3.7)
-JS bundles leak `localhost:3001`, `api.zomato.com`, 143 internal webroutes, and undiscovered subdomains (accounts, sentry, enterprise, api).
 
 ---
 
@@ -44,9 +42,6 @@ DSN `d8303b4f...@sentry.buglytics.com/52` exposed in webpack chunk and SSR `<met
 
 ### ID-03 — Unauthenticated access to internal Awards platform (Low-Medium)
 `indrive.mediator.cloud` (PHP 8.4.11) auto-issues `mediator_auth` cookie with `SameSite=None` — CSRF prerequisite. Public to internet.
-
-### ID-04 — Internal Courier API endpoints exposed unauthenticated (Low)
-`/api/courier/*` and `/api/web-vitals` reachable; inconsistent 401/405 responses leak endpoint existence. `web-vitals` is a live data receiver.
 
 ### ID-05 — Reflected XSS via unescaped og:url meta tag (Medium, CWE-79)
 `indrive.mediator.cloud/?q=test"/><script>...` breaks out of `content="..."` attribute; no CSP. All query params reflected via raw REQUEST_URI without `htmlspecialchars()`.
@@ -73,8 +68,6 @@ No CSP/XFO/HSTS/X-Content-Type/Referrer/Permissions on any property. Clickjackin
 ### D-05 — Internal infra disclosure & exposed staging (Medium, CWE-200, CVSS 5.8)
 `msbots.desk365.io` prints `prod-teams-bot-vm-01`; staging WP with 12 users + same vuln plugin stack; CT logs expose jenkins/staging2-4/sqs/test365 subdomains.
 
-### D-06 — Jetpack connection status endpoint public (Low/Info, CWE-200, CVSS 3.7)
-`/wp-json/jetpack/v4/connection` returns config; `hasConnectedOwner:false` implies degraded Jetpack security modules. By-design but fingerprinting aid.
 
 ---
 
@@ -104,12 +97,6 @@ Resolves to GCP IAP (Error 52 BACKEND_UNAVAILABLE); IAP blocking works, but aban
 ### GS-08 — Duplicate DMARC records (Low, CVSS 3.7)
 Two `_dmarc` TXT records → receivers must not apply DMARC (RFC 7489). Compounds GS-03. No rua/ruf.
 
-### GS-09 — Missing security.txt (Info, CVSS 2.0)
-No `/.well-known/security.txt` (RFC 9116).
-
-### GS-10 — Google Pay merchant ID disclosed in UCP (Info, CVSS 2.5)
-merchant_id `16708973830884969730` + gatewayMerchantId in unauth UCP response. Low (generally public).
-
 ### GS-CSRF-001 — CSRF on /api/mcp JSONRPC update_cart (High, CWE-352, CVSS 7.1)
 Unauthenticated `/api/mcp` accepts cross-origin state change (no token, no Origin check, SameSite=Lax). Silent cart population + cart-fixation. Tools exposed: update_cart, get_cart, search_catalog, etc. Also CWE-306 (missing auth).
 
@@ -126,21 +113,6 @@ CSP has no `script-src`/`default-src`/nonce. Search reflects `javascript:alert(1
 ### MC-03 — jQuery 1.9.1 multiple CVEs (Medium, CWE-1104, CVSS 6.1)
 EOL jQuery from googleapis. CVE-2015-9251, 2019-11358 (proto pollution), 2020-11022/11023 (XSS). `cart/update.js` accepts `__proto__` payload (HTTP 200).
 
-### MC-04 — HulkApps Form Builder config/email disclosure (Low, CWE-200, CVSS 3.7)
-Inline HTML leaks `woot@mcaffeine.com`, HulkApps shop UUID/id 53134, Shopify Plus confirmation, store domain, creation date.
-
-### MC-05 — Mobile app identifier disclosure via /.well-known/ (Info, CWE-200)
-AASA: bundle `com.coffye.mcaffeine`, Team ID `XY8WRY72D4`. assetlinks: 2 SHA-256 certs (possible debug cert trusted in prod).
-
-### MC-06 — GraphQL Storefront introspection enabled unauth (Low, CWE-200, CVSS 3.5)
-30 query types exposed. IDOR not exploitable (Shopify enforces scopes) but full schema mapped; bulk scraping trivial.
-
-### MC-07 — Short HSTS max-age (Low, CWE-319, CVSS 3.1)
-`max-age=7889238` (~91d). `support.mcaffeine.com` all ports timeout (offline/firewalled).
-
-### MC-08 — Affiliate ID exfiltration to third-party API (Info, CWE-359)
-Inline JS sends `gbaid` URL param to `api-brokenlinkmanager.seoant.com`. Dev/QA/sandbox GoKwik analytics endpoints active in production.
-
 ### MC-09 — Snapmint Unleash feature-flag full dump via hardcoded key (High, CWE-798, CVSS 7.5)
 `checkout-merchant.snapmint.com/js/v1/5827` embeds `clientKey:'proxy-client-key'`; `unleash-proxy-prod.snapmint.com/proxy` dumps 400+ flags incl. `skipBureauCheck`, `admin_pan_verification`, `Force_Logout`, credit-limit bypass, partner names, ~400 JIRA IDs. Reached via mCaffeine's payment integration.
 
@@ -150,8 +122,6 @@ Inline JS sends `gbaid` URL param to `api-brokenlinkmanager.seoant.com`. Dev/QA/
 ### MC-11 — GoKwik dev analytics hardcoded in prod JS (Medium, CWE-912/200, CVSS 5.3)
 `devanalytics.gokwik.co/analytics.js` hardcodes `dev-hits.gokwik.co`, has `console.log("here deployed")`, POSTs prod user session data to dev API. 5 non-prod GoKwik endpoints live (last modified 2022).
 
-### MC-12 — appsmav.com Scratch-Win hardcoded contest ID (Low, CWE-200, CVSS 3.1)
-`win.appsmav.com/script.js` (iFrameResizer v3.5.1, 2015 EOL) leaks contest ID `bahc` in comment. Enables direct backend nav bypassing page-layer limits.
 
 ---
 
@@ -163,17 +133,6 @@ Admin dashboard, student search, billing, exam results, transcripts all HTTP 200
 ### CA-M-02 — No rate limiting on auth endpoints (Medium)
 `/login/otprequest`, `/changepasswordrequest`, `/reset` — 10/10 rapid requests succeed. OTP/reset-token brute force at machine speed.
 
-### CA-L-01 — /login/create unhandled 500 (Low)
-`POST /login/create {}` → 500 "Something broke!"; no input validation; potential DoS.
-
-### CA-L-02 — Anti-debugging controls / security by obscurity (Low)
-`disable-devtool.min.js` + `ALLOW_DEV_TOOLS=false`. Trivially bypassed; implies hidden client logic.
-
-### CA-I-01 — Institution enumeration via instCode (Info)
-`otprequest` reveals tenant codes TCE, TCEM, KCT, AVIT, SSIM, JMC via `{"code":"duplicate"}`.
-
-### CA-I-02 — Old AWS SDK loaded client-side (Info)
-AWS SDK v2.279.1 (2018); S3 `config.js` currently access-denied — if exposed, leaks Cognito/credentials.
 
 ---
 
@@ -191,8 +150,6 @@ EOL since Jan 2025, unpatched. CHANGELOG.txt, xmlrpc.php, open user registration
 ### T-04 — JSON:API exposes full node content & revisions (Medium, CVSS 5.3)
 `/jsonapi/node/page` (all node types) leaks body HTML, nid/vid, revision_uid → admin UUID, file URI structure.
 
-### T-05 — Missing security headers on www.tce.edu (Low, CVSS 4.2)
-No CSP/HSTS/Permissions-Policy/Referrer-Policy. XFO + nosniff present. HTTPS redirect not HSTS-enforced.
 
 ---
 
@@ -241,8 +198,5 @@ No CSP/XFO/X-Content-Type/X-XSS/Permissions/Referrer.
 
 ### TN-13 — User enumeration via login response (Medium, CWE-204)
 HTTP 200 "Not Valid" = account exists; HTTP 500 = no account. 14 staff accounts confirmed valid.
-
-### TN-09 — Hidden API action enumeration (jqreq.do) (Low)
-20+ undocumented actions (PackageBook, BookSeat, ConfirmBooking…) return 500 when probed, confirming existence.
 
 **Attack chain:** TN-07 emails → TN-13 enumeration → TN-11/TN-12 CAPTCHA defeat → unlimited brute force → staff account takeover. Separately TN-10 IDOR → TN-04 OTP brute → cancel any ticket.
