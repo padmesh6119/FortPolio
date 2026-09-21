@@ -279,10 +279,10 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   const INTERN_DETAILS=[
     {tag:'Internship 01',role:'Cyber Forensics Intern',org:'Police Cyber Department',year:'2024',body:'Embedded with the Police Cyber Department\'s digital forensics unit. Assisted in analysing digital evidence from seized devices, extracting data from damaged drives, recovering deleted files, examining browser histories, and documenting findings for legal proceedings. Learned chain-of-custody procedures, evidence handling protocols, and how cybercrime investigations are structured within law enforcement.',tags:['Forensics']},
-    {tag:'Internship 02',role:'Penetration Testing Intern',org:'Hacktify Cyber Security',year:'2024',body:'Worked in an offensive security team running assessments for client web applications. Performed manual and automated vulnerability assessments — identifying SQL injection, XSS, IDOR, broken authentication, and misconfigured servers. Used Burp Suite, OWASP ZAP, and custom scripts to map attack surfaces. Wrote detailed vulnerability reports with CVSS scores and remediation recommendations.',tags:['Offensive Sec']},
-    {tag:'Internship 03',role:'Penetration Tester Intern',org:'Human Initials',year:'2024',body:'Conducted security testing on web applications and internal network components. Used Nmap for network mapping, Metasploit for exploitation attempts against test environments, and Burp Suite for web application assessments. Participated in client debriefs and helped translate technical findings into business-impact language.',tags:['Pen Testing']},
-    {tag:'Internship 04',role:'VAPT Intern',org:'BCBUZZ',year:'2025',body:'Conducted end-to-end Vulnerability Assessment and Penetration Testing (VAPT) engagements at BCBUZZ. Performed black-box and grey-box assessments across web applications, APIs, and internal network infrastructure. Identified and documented critical vulnerabilities including authentication bypasses, insecure direct object references, and misconfigured server components.',tags:['VAPT']},
-    {tag:'Internship 05',role:'Cyber Security Intern',org:'SRM Institute of Science and Technology',year:'2026',body:'One-month Cyber Security Internship with the Department of Data Science and Business Systems, School of Computing, SRM IST (15 June — 15 July 2026). Assigned to a CVE analysis project targeting enterprise and consumer-grade routers — identifying publicly disclosed vulnerabilities, working through firmware deep dives, studying CVE advisories and security bulletins, scoring findings against CVSS metrics, examining exploitability, and documenting real impact on network infrastructure. Closed out with 8 vulnerabilities found across 3 routers, currently under disclosure. Awarded a Letter of Appreciation for analytical thinking, attention to detail, and professionalism.',tags:['CVE Research','Firmware','CVSS']},
+    {tag:'Internship 02',role:'Security Engineering Internship',org:'Hacktify Cyber Security',year:'2024',body:'Worked in an offensive security team running assessments for client web applications. Performed manual and automated vulnerability assessments — identifying SQL injection, XSS, IDOR, broken authentication, and misconfigured servers. Used Burp Suite, OWASP ZAP, and custom scripts to map attack surfaces. Wrote detailed vulnerability reports with CVSS scores and remediation recommendations.',tags:['Offensive Sec']},
+    {tag:'Internship 03',role:'Cybersecurity Analyst',org:'Human Initials',year:'2024',body:'Conducted security testing on web applications and internal network components. Used Nmap for network mapping, Metasploit for exploitation attempts against test environments, and Burp Suite for web application assessments. Participated in client debriefs and helped translate technical findings into business-impact language.',tags:['Pen Testing']},
+    {tag:'Internship 04',role:'Security Mentorship',org:'BCBUZZ Technologies',year:'2025',body:'Conducted end-to-end Vulnerability Assessment and Penetration Testing (VAPT) engagements at BCBUZZ. Performed black-box and grey-box assessments across web applications, APIs, and internal network infrastructure. Identified and documented critical vulnerabilities including authentication bypasses, insecure direct object references, and misconfigured server components.',tags:['VAPT']},
+    {tag:'Internship 05',role:'Network Security Engineer',org:'SRM Institute of Science and Technology',year:'2026',body:'One-month Cyber Security Internship with the Department of Data Science and Business Systems, School of Computing, SRM IST (15 June — 15 July 2026). Assigned to a CVE analysis project targeting enterprise and consumer-grade routers — identifying publicly disclosed vulnerabilities, working through firmware deep dives, studying CVE advisories and security bulletins, scoring findings against CVSS metrics, examining exploitability, and documenting real impact on network infrastructure. Closed out with 8 vulnerabilities found across 3 routers, currently under disclosure. Awarded a Letter of Appreciation for analytical thinking, attention to detail, and professionalism.',tags:['CVE Research','Firmware','CVSS']},
     {tag:'Internship 06',role:'Top 1% Global Rank',org:'TryHackMe',year:'2025',body:'Achieved a Top 1% global ranking on TryHackMe through consistent hands-on practice across hundreds of rooms and challenges. Completed structured learning paths covering web exploitation, Active Directory attacks, network security, cryptography, privilege escalation, and blue-team defence.',tags:['Top 1%']},
   ];
   const INTERN_IMGS=['assets/Police station intern.png','assets/Hactify.png','assets/Human initials.png','assets/under.png','assets/SRM.jpeg','assets/TryHackme.png'];
@@ -333,6 +333,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     {num:17,name:'Generative AI Overview for Project Managers',issuer:'PMI',year:'2025'},
     {num:18,name:'Introduction to Cybersecurity',issuer:'Cisco Networking Academy',year:'2025'},
     {num:19,name:'Networking Basics',issuer:'Cisco Networking Academy',year:'2025'},
+    {num:20,name:'Cybersecurity Fundamentals Associate (OCFA)',issuer:'OPSWAT Academy',year:'2024'},
+    {num:21,name:'Legacy Systems Security Associate (OLSA)',issuer:'OPSWAT Academy',year:'2024'},
+    {num:22,name:'Penetration Testing, Threat Hunting & Cryptography',issuer:'IBM · Coursera',year:'2024'},
+    {num:23,name:'Cybersecurity Foundations',issuer:'Google · Coursera',year:'2024'},
+    {num:24,name:'Introduction to DevOps',issuer:'IBM · Coursera',year:'2024'},
+    {num:25,name:'Hacking WEP/WPA/WPA2 Wi-Fi Networks',issuer:'Packt · Coursera',year:'2024'},
   ];
 
   const cv=document.getElementById('certCanvas');
@@ -587,13 +593,25 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetailModal();}
     {id:12,name:'nids',icon:'ti-radar',domain:'Network Security · IDS/IPS',cat:'security',stack:['Python','JA3','IsolationForest','nftables'],status:'ACTIVE',desc:'Seven-engine hybrid NIDS/IPS. Signature heuristics, JA3 TLS fingerprinting, threat-intel IOC matching, IsolationForest anomaly detection, autoencoder reconstruction scoring, RITA-style C2 beacon detection, and live nftables auto-blocking. Live websocket SOC dashboard. Suricata EVE JSON output.',size:'28.7 KB',modified:'2026-05-18',link:null},
     {id:14,name:'dossier',icon:'ti-search',domain:'OSINT · Intelligence',cat:'security',stack:['Python','FastAPI','Docker'],status:'ACTIVE',desc:'OSINT intelligence engine. Sweeps 35+ platforms in parallel — no paid APIs, no login scraping, fully free and open. Built on FastAPI with SSE streaming and a React frontend.',size:'16.8 KB',modified:'2026-03-14',link:'https://github.com/padmesh6119/Dossier'},
     {id:16,name:'lockbox',icon:'ti-lock-square',domain:'Cryptography · CLI',cat:'tools',stack:['Python','AES-256-GCM','scrypt'],status:'ACTIVE',desc:'Portable folder and pendrive encryption. Every file sealed with AES-256-GCM under an scrypt-derived key. Same tool and commands run on Windows, Linux, and macOS. Pure Python, no dependencies beyond the standard library.',size:'6.3 KB',modified:'2026-01-08',link:null},
+    {id:17,name:'temp-auth-sys',icon:'ti-fingerprint',domain:'Auth · Biometrics',cat:'auth',stack:['Python','Keystroke Dynamics','ML'],status:'ACTIVE',desc:'Keystroke-dynamics based behavioral biometric identity verification system for continuous user authentication. Builds a per-user typing profile and rejects sessions that deviate beyond a trained threshold.',size:'9.4 KB',modified:'2024-09-15',link:null},
+    {id:18,name:'web-prowler',icon:'ti-radar-2',domain:'Recon · Automation',cat:'security',stack:['Python','Tor','Nmap'],status:'ACTIVE',desc:'Automated recon and vulnerability scanner routing through Tor with Nmap-based exploit detection. Built for Science Expo 2024 — took 1st place.',size:'8.2 KB',modified:'2024-03-10',link:null},
+    {id:19,name:'nfc-puf',icon:'ti-nfc',domain:'Hardware · Auth',cat:'hardware',stack:['ESP32','NFC','PUF'],status:'ACTIVE',desc:'NFC-triggered physically unclonable function based hardware-level device authentication on ESP32. Each device produces a unique fingerprint derived from silicon manufacturing variance.',size:'6.8 KB',modified:'2024-08-20',link:null},
+    {id:20,name:'esp-audit',icon:'ti-cpu',domain:'Firmware · Security',cat:'security',stack:['Python','ESP32','Serial'],status:'ACTIVE',desc:'ESP32 firmware security auditor. Connects over serial, reads eFuse config, dumps flash partitions, parses NVS namespace for hardcoded secrets, and generates CVSS-severity reports per finding.',size:'11.2 KB',modified:'2025-01-10',link:null},
+    {id:21,name:'nit-lab',icon:'ti-network',domain:'Network · Intrusion',cat:'security',stack:['Python','Networking','ML'],status:'ACTIVE',desc:'Network intrusion test lab simulating a virtual network with 4 machines and 2 honeytokens. Modules cover honeypot deployment, anomaly detection, alert triage, dashboard visualization, and pcap capture.',size:'14.7 KB',modified:'2024-11-05',link:null},
+    {id:22,name:'fraud-shield',icon:'ti-shield-check',domain:'ML · Fraud Detection',cat:'security',stack:['Python','ML','Streamlit'],status:'ACTIVE',desc:'ML-based transaction fraud detection system. Pipeline covers data preprocessing, feature profiling, model training and evaluation, and a results dashboard for flagged transactions.',size:'10.3 KB',modified:'2024-10-20',link:null},
+    {id:23,name:'unveil',icon:'ti-world-search',domain:'Web · Recon',cat:'security',stack:['Python','requests','dnspython'],status:'ACTIVE',desc:'Website security analyzer. Checks SSL certificate validity, DNS resolution, domain age via WHOIS, and blacklist status. Clean CLI output with per-check pass/fail.',size:'5.1 KB',modified:'2024-07-14',link:null},
+    {id:24,name:'stocks-ml',icon:'ti-chart-line',domain:'ML · Finance',cat:'tools',stack:['Python','ML','pandas'],status:'ACTIVE',desc:'Indian stock bounce-back probability engine. Trained on historical NSE data to predict whether a stock that drops 4%+ in a day recovers within 30 trading days. Key signals: market-wide drop vs isolated, and trading volume spike.',size:'8.9 KB',modified:'2025-03-01',link:null},
+    {id:25,name:'pychain',icon:'ti-link',domain:'Blockchain',cat:'tools',stack:['Python','Flask','REST'],status:'INDEV',desc:'Python blockchain implementation with full node logic, consensus, REST API, and a P2P network layer. Includes chain validation, demo mining, and test suite.',size:'7.6 KB',modified:'2024-06-10',link:null},
+    {id:26,name:'thm-bot',icon:'ti-robot',domain:'Automation · CTF',cat:'tools',stack:['Python','Playwright','Async'],status:'ACTIVE',desc:'Async TryHackMe automation bot using Playwright. Tracks room progress across sessions, resumes from last checkpoint, and handles CSRF + auth flows headlessly.',size:'6.3 KB',modified:'2025-02-18',link:null},
+    {id:27,name:'crypto-ticker',icon:'ti-currency-bitcoin',domain:'Hardware · Display',cat:'hardware',stack:['ESP32','Arduino','OLED'],status:'ACTIVE',desc:'ESP32-based crypto price ticker. Fetches live prices over Wi-Fi and renders them on an SSD1306 OLED via Adafruit GFX. Compact and always-on desk display.',size:'4.8 KB',modified:'2024-12-05',link:null},
+    {id:28,name:'iot-chaincode',icon:'ti-topology-ring',domain:'IoT · Blockchain',cat:'hardware',stack:['Go','Hyperledger Fabric','Python'],status:'INDEV',desc:'IoT data integrity pipeline on Hyperledger Fabric. Go chaincode handles on-chain writes; a Python firmware bridge relays sensor readings from ESP32 nodes to the ledger.',size:'12.1 KB',modified:'2024-05-22',link:null},
   ];
 
   const section=document.getElementById('p6');
-  if(!section)return;
+  const host=document.getElementById('finderHost');
+  if(!section||!host)return;
 
-  section.innerHTML=`
-  <div class="finder-host"><div class="finder-window">
+  host.innerHTML=`<div class="finder-window">
     <div class="titlebar">
       <div class="traffic-lights"><div class="tl tl-close"></div><div class="tl tl-min"></div><div class="tl tl-max"></div></div>
       <span class="window-title">The Breach Report — Projects</span>
@@ -641,13 +659,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetailModal();}
       </div>
     </div>
     <div class="finder-statusbar"><span class="finder-status-text" id="statusText">10 items</span></div>
-  </div></div>`;
+  </div>`;
 
   let selectedId=null,activeCat='all';
 
-  section.querySelectorAll('.sidebar-item').forEach(item=>{
+  host.querySelectorAll('.sidebar-item').forEach(item=>{
     item.addEventListener('click',()=>{
-      section.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+      host.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
       item.classList.add('active');
       activeCat=item.dataset.cat||'all';
       selectedId=null;
@@ -677,13 +695,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetailModal();}
   function selectProject(id){
     if(selectedId===id){
       selectedId=null;
-      section.querySelectorAll('.file-item').forEach(e=>e.classList.remove('selected'));
+      host.querySelectorAll('.file-item').forEach(e=>e.classList.remove('selected'));
       showEmpty();
       document.getElementById('statusText').textContent=visible().length+' items';
       return;
     }
     selectedId=id;
-    section.querySelectorAll('.file-item').forEach(e=>e.classList.toggle('selected',parseInt(e.dataset.id)===id));
+    host.querySelectorAll('.file-item').forEach(e=>e.classList.toggle('selected',parseInt(e.dataset.id)===id));
     const p=PROJECTS.find(p=>p.id===id);
     showPreview(p);
     document.getElementById('statusText').textContent='1 item selected — '+p.size;
@@ -913,7 +931,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetailModal();}
   const SEGS=12;
   const nodes=[];
 
-  /* FIX: use setTransform instead of scale to avoid compounding DPR on resize */
   function initNodes(){
     const dpr=window.devicePixelRatio||1;
     W=cv.offsetWidth;
